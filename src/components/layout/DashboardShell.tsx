@@ -7,7 +7,7 @@ interface DashboardShellProps {
 }
 
 const DashboardShell = ({ children }: DashboardShellProps) => (
-  <div className="app-shell">
+  <div className="app-shell dashboard-shell">
     <Header />
     <DashboardLayout>{children}</DashboardLayout>
   </div>

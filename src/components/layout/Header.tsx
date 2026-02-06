@@ -14,6 +14,7 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [headerHidden, setHeaderHidden] = useState(false);
 
   const getDashboardPath = () => {
     if (!user) return '/dashboard/registrations';
@@ -29,6 +30,30 @@ const Header = () => {
     setMenuOpen(false);
   }, [location.pathname]);
 
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let idleTimer: number | undefined;
+
+    const handleScroll = () => {
+      const current = window.scrollY;
+      const isScrollingDown = current > lastScrollY;
+      const shouldHide = isScrollingDown && current > 80;
+      setHeaderHidden(shouldHide);
+      lastScrollY = current;
+
+      if (idleTimer) window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(() => {
+        setHeaderHidden(false);
+      }, 800);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (idleTimer) window.clearTimeout(idleTimer);
+    };
+  }, []);
+
   const handleLogout = () => {
     logout();
     navigate('/');
@@ -40,7 +65,7 @@ const Header = () => {
   const actionsClassName = `app-header__actions ${menuOpen ? 'is-open' : 'mobile-hidden'}`;
 
   return (
-    <header className="app-header">
+    <header className={`app-header ${headerHidden ? 'app-header--hidden' : ''}`}>
       <div className="app-header__brand">
         <Link to="/">
           <img src={fptTelecomLogo} alt="FPT Telecom" className="brand-logo" />

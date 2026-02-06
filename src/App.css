@@ -9,6 +9,12 @@
   min-height: 100vh;
 }
 
+.dashboard-shell {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
 .app-content {
   flex: 1;
   width: min(1200px, 100%);
@@ -17,13 +23,24 @@
 }
 
 .app-header {
-  width: min(1200px, 100%);
-  margin: 0 auto;
-  padding: 1.5rem;
+  width: 100%;
+  margin: 0;
+  padding: 1.5rem 3rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--bg-base);
+  backdrop-filter: blur(8px);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.app-header--hidden {
+  transform: translateY(-120%);
+  opacity: 0;
 }
 
 .app-header__brand a {
@@ -783,8 +800,10 @@ th {
 .dashboard-layout {
   display: grid;
   grid-template-columns: 280px 1fr;
-  min-height: calc(100vh - 100px);
+  min-height: 0;
   gap: 0;
+  flex: 1;
+  height: 100%;
 }
 
 .dashboard-sidebar {
@@ -794,7 +813,8 @@ th {
   flex-direction: column;
   position: sticky;
   top: 0;
-  height: calc(100vh - 100px);
+  height: 100%;
+  overflow-y: auto;
 }
 
 .dashboard-sidebar__header {
@@ -893,6 +913,7 @@ th {
   padding: 3rem 2rem;
   background: var(--bg);
   overflow-y: auto;
+  min-height: 100%;
 }
 
 @keyframes shimmer {
