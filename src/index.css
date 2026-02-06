@@ -1,20 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Archivo:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Space+Grotesk:wght@500;600&display=swap');
 
 :root {
-  font-family: 'Space Grotesk', 'Archivo', system-ui;
+  font-family: 'Be Vietnam Pro', 'Space Grotesk', system-ui;
   line-height: 1.6;
   font-weight: 400;
-  color: #f8fafc;
-  background-color: #03040f;
+  color: #0f172a;
+  background-color: #f6f8fb;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  --bg-base: radial-gradient(circle at 20% 20%, #0f1c40, #050714 55%);
-  --card: #0b1026;
-  --muted: #94a3b8;
-  --divider: rgba(148, 163, 184, 0.2);
-  --accent: #f97316;
-  --accent-2: #38bdf8;
+  --bg: #f6f8fb;
+  --bg-base: linear-gradient(135deg, #fdf5ef 0%, #f6f9ff 45%, #ffffff 100%);
+  --card: #ffffff;
+  --muted: #5b6475;
+  --divider: #e5e7eb;
+  --accent: #f37021;
+  --accent-2: #0b6abf;
 }
 
 * {
@@ -26,7 +27,7 @@ body {
   min-height: 100vh;
   background-image: var(--bg-base);
   background-attachment: fixed;
-  color: #e2e8f0;
+  color: #0f172a;
 }
 
 a {

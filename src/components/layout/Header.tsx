@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import fptTelecomLogo from '../../assets/fpt-telecom-logo.png';
 
 const navItems = [
   { label: 'Home', path: '/' },
@@ -14,19 +15,15 @@ const Header = () => {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const roleLinks = useMemo(() => {
-    if (!user) return [];
-    if (user.role === 'Admin') {
-      return [
-        { label: 'Registrations', path: '/dashboard/registrations' },
-        { label: 'Posts', path: '/dashboard/posts' }
-      ];
+  const getDashboardPath = () => {
+    if (!user) return '/dashboard/registrations';
+    if (user.role === 'Admin' || user.role === 'Staff') {
+      return '/dashboard/registrations';
     }
-    if (user.role === 'Staff') {
-      return [{ label: 'Registrations', path: '/dashboard/registrations' }];
-    }
-    return [{ label: 'My Orders', path: '/dashboard/my-registrations' }];
-  }, [user]);
+    return null; // User không có dashboard
+  };
+
+  const showDashboardLink = user && (user.role === 'Admin' || user.role === 'Staff');
 
   useEffect(() => {
     setMenuOpen(false);
@@ -46,8 +43,7 @@ const Header = () => {
     <header className="app-header">
       <div className="app-header__brand">
         <Link to="/">
-          <span className="brand-mark">FPT</span>
-          <span className="brand-tagline">Fiber Studio</span>
+          <img src={fptTelecomLogo} alt="FPT Telecom" className="brand-logo" />
         </Link>
       </div>
       <button
@@ -66,11 +62,22 @@ const Header = () => {
             {item.label}
           </NavLink>
         ))}
-        {roleLinks.map((item) => (
-          <NavLink key={item.path} to={item.path} className={({ isActive }) => (isActive ? 'active' : '')}>
-            {item.label}
+        {showDashboardLink && (
+          <NavLink 
+            to={getDashboardPath()!} 
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Dashboard
           </NavLink>
-        ))}
+        )}
+        {user && user.role !== 'Admin' && user.role !== 'Staff' && (
+          <NavLink 
+            to="/dashboard/my-registrations" 
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            My Orders
+          </NavLink>
+        )}
       </nav>
       <div className={actionsClassName}>
         {!isAuthenticated ? (

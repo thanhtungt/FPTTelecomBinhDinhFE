@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import AppShell from './components/layout/AppShell';
+import DashboardShell from './components/layout/DashboardShell';
 import HomePage from './pages/HomePage';
 import PackagesPage from './pages/PackagesPage';
 import PostsPage from './pages/PostsPage';
@@ -14,41 +15,51 @@ import { ProtectedRoute } from './components/routing/ProtectedRoute';
 import './App.css';
 
 const App = () => (
-  <AppShell>
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/packages" element={<PackagesPage />} />
-      <Route path="/posts" element={<PostsPage />} />
-      <Route path="/posts/:slug" element={<PostDetailPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route
-        path="/dashboard/registrations"
-        element={
-          <ProtectedRoute roles={['Admin', 'Staff']}>
-            <AdminRegistrationsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard/posts"
-        element={
-          <ProtectedRoute roles={['Admin']}>
-            <AdminPostsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard/my-registrations"
-        element={
+  <Routes>
+    {/* Public routes */}
+    <Route path="/" element={<AppShell><HomePage /></AppShell>} />
+    <Route path="/packages" element={<AppShell><PackagesPage /></AppShell>} />
+    <Route path="/posts" element={<AppShell><PostsPage /></AppShell>} />
+    <Route path="/posts/:slug" element={<AppShell><PostDetailPage /></AppShell>} />
+    <Route path="/login" element={<AppShell><LoginPage /></AppShell>} />
+    <Route path="/register" element={<AppShell><RegisterPage /></AppShell>} />
+    
+    {/* User route - using AppShell (no sidebar) */}
+    <Route
+      path="/dashboard/my-registrations"
+      element={
+        <AppShell>
           <ProtectedRoute>
             <MyRegistrationsPage />
           </ProtectedRoute>
-        }
-      />
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
-  </AppShell>
+        </AppShell>
+      }
+    />
+    
+    {/* Admin/Staff dashboard routes - using DashboardShell (with sidebar) */}
+    <Route
+      path="/dashboard/registrations"
+      element={
+        <DashboardShell>
+          <ProtectedRoute roles={['Admin', 'Staff']}>
+            <AdminRegistrationsPage />
+          </ProtectedRoute>
+        </DashboardShell>
+      }
+    />
+    <Route
+      path="/dashboard/posts"
+      element={
+        <DashboardShell>
+          <ProtectedRoute roles={['Admin']}>
+            <AdminPostsPage />
+          </ProtectedRoute>
+        </DashboardShell>
+      }
+    />
+    
+    <Route path="*" element={<AppShell><NotFoundPage /></AppShell>} />
+  </Routes>
 );
 
 export default App;
