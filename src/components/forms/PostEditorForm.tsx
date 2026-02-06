@@ -42,13 +42,19 @@ const defaultValues: FormValues = {
 
 interface PostEditorFormProps {
   initialValues?: PostPayload;
-  submitting?: boolean;
-  isEditing?: boolean;
   onSubmit: (values: PostPayload) => void | Promise<void>;
-  onCancelEdit?: () => void;
+  onCancel?: () => void;
+  submitting?: boolean;
+  isEditMode?: boolean;
 }
 
-const PostEditorForm = ({ initialValues, submitting = false, isEditing = false, onSubmit, onCancelEdit }: PostEditorFormProps) => {
+const PostEditorForm = ({
+  initialValues,
+  onSubmit,
+  onCancel,
+  submitting = false,
+  isEditMode = false
+}: PostEditorFormProps) => {
   const {
     register,
     handleSubmit,
@@ -91,11 +97,11 @@ const PostEditorForm = ({ initialValues, submitting = false, isEditing = false, 
     <form className="post-editor" onSubmit={handleSubmit(handleFormSubmit)}>
       <div className="post-editor__header">
         <div>
-          <p className="eyebrow">{isEditing ? 'Update story' : 'Share story'}</p>
-          <h2>{isEditing ? 'Edit article' : 'New article'}</h2>
+          <p className="eyebrow">{isEditMode ? 'Update story' : 'Share story'}</p>
+          <h2>{isEditMode ? 'Edit article' : 'New article'}</h2>
         </div>
-        {isEditing && (
-          <button type="button" className="ghost-btn" onClick={onCancelEdit}>
+        {isEditMode && onCancel && (
+          <button type="button" className="ghost-btn" onClick={onCancel}>
             Cancel edit
           </button>
         )}
@@ -145,7 +151,7 @@ const PostEditorForm = ({ initialValues, submitting = false, isEditing = false, 
         />
       </div>
       <button type="submit" className="primary-btn" disabled={submitting}>
-        {submitting ? 'Saving...' : isEditing ? 'Update post' : 'Publish post'}
+        {submitting ? 'Saving...' : isEditMode ? 'Update post' : 'Publish post'}
       </button>
     </form>
   );

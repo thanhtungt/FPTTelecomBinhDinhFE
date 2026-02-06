@@ -9,6 +9,7 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import AdminRegistrationsPage from './pages/dashboard/AdminRegistrationsPage';
 import AdminPostsPage from './pages/dashboard/AdminPostsPage';
+import AdminPostEditorPage from './pages/dashboard/AdminPostEditorPage';
 import MyRegistrationsPage from './pages/dashboard/MyRegistrationsPage';
 import NotFoundPage from './pages/NotFoundPage';
 import { ProtectedRoute } from './components/routing/ProtectedRoute';
@@ -53,6 +54,26 @@ const App = () => (
         <DashboardShell>
           <ProtectedRoute roles={['Admin']}>
             <AdminPostsPage />
+          </ProtectedRoute>
+        </DashboardShell>
+      }
+    />
+    <Route
+      path="/dashboard/posts/new"
+      element={
+        <DashboardShell>
+          <ProtectedRoute roles={['Admin']}>
+            <AdminPostEditorPage />
+          </ProtectedRoute>
+        </DashboardShell>
+      }
+    />
+    <Route
+      path="/dashboard/posts/:id/edit"
+      element={
+        <DashboardShell>
+          <ProtectedRoute roles={['Admin']}>
+            <AdminPostEditorPage />
           </ProtectedRoute>
         </DashboardShell>
       }
