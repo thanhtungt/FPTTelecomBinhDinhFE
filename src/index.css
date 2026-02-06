@@ -28,6 +28,7 @@ body {
   background-image: var(--bg-base);
   background-attachment: fixed;
   color: #0f172a;
+  overflow-x: hidden;
 }
 
 a {
