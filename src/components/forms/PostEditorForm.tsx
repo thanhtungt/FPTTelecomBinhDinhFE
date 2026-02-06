@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { PostPayload } from '../../types/post';
 import { POST_CATEGORY_OPTIONS, POST_CATEGORY_VALUES } from '../../constants/posts';
+import RichTextEditor from './RichTextEditor';
 
 const categoryValues = POST_CATEGORY_VALUES;
 
@@ -17,7 +18,17 @@ const formSchema = z.object({
     .refine((val) => !val || /^https?:\/\//.test(val), {
       message: 'Image URL must start with http(s)'
     }),
-  content: z.string().min(50, 'Content must be at least 50 characters')
+  content: z
+    .string()
+    .min(1, 'Content is required')
+    .refine(
+      (html) => {
+        // Strip HTML tags and check plain text length
+        const text = html.replace(/<[^>]*>/g, '').trim();
+        return text.length >= 50;
+      },
+      { message: 'Content must be at least 50 characters' }
+    )
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -42,6 +53,7 @@ const PostEditorForm = ({ initialValues, submitting = false, isEditing = false, 
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors }
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -62,6 +74,7 @@ const PostEditorForm = ({ initialValues, submitting = false, isEditing = false, 
   }, [initialValues, reset]);
 
   const handleFormSubmit: SubmitHandler<FormValues> = (values) => {
+    console.log('[PostEditorForm] Form submitted with values:', values);
     const normalizedImage = values.imageUrl.trim();
     const payload: PostPayload = {
       title: values.title.trim(),
@@ -69,6 +82,7 @@ const PostEditorForm = ({ initialValues, submitting = false, isEditing = false, 
       content: values.content.trim(),
       imageUrl: normalizedImage ? normalizedImage : undefined
     };
+    console.log('[PostEditorForm] Payload to send:', payload);
 
     return onSubmit(payload);
   };
@@ -109,12 +123,27 @@ const PostEditorForm = ({ initialValues, submitting = false, isEditing = false, 
           {errors.imageUrl && <small>{errors.imageUrl.message}</small>}
         </label>
       </div>
-      <label className="post-editor__content">
+      <div className="post-editor__content">
         <span>Content</span>
-        <textarea rows={12} placeholder="Compose the whole story..." {...register('content')} />
-        <p className="form-hint">Use line breaks to create paragraphs. Markdown is not supported yet.</p>
-        {errors.content && <small>{errors.content.message}</small>}
-      </label>
+        <Controller
+          name="content"
+          control={control}
+          render={({ field }) => {
+            console.log('[Controller] Current field value length:', field.value?.length || 0);
+            return (
+              <RichTextEditor
+                value={field.value}
+                onChange={(content) => {
+                  console.log('[Controller] onChange called with content length:', content.length, 'preview:', content.substring(0, 50));
+                  field.onChange(content);
+                }}
+                placeholder="Write your story here... Use formatting tools to style your content."
+                error={errors.content?.message}
+              />
+            );
+          }}
+        />
+      </div>
       <button type="submit" className="primary-btn" disabled={submitting}>
         {submitting ? 'Saving...' : isEditing ? 'Update post' : 'Publish post'}
       </button>

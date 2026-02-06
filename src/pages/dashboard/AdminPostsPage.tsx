@@ -59,20 +59,25 @@ const AdminPostsPage = () => {
     : undefined;
 
   const handleSubmit = async (values: PostPayload) => {
+    console.log('[AdminPostsPage] handleSubmit called with:', values);
     setSubmitting(true);
     try {
       if (editingPost) {
+        console.log('[AdminPostsPage] Updating post:', editingPost.id);
         const updated = await PostAPI.update(editingPost.id, values);
+        console.log('[AdminPostsPage] Update response:', updated);
         setPosts((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
         showToast('Post updated', 'success');
       } else {
+        console.log('[AdminPostsPage] Creating new post');
         const created = await PostAPI.create(values);
+        console.log('[AdminPostsPage] Create response:', created);
         setPosts((prev) => [created, ...prev]);
         showToast('Post published', 'success');
       }
       setEditingPost(null);
     } catch (error) {
-      console.error(error);
+      console.error('[AdminPostsPage] Error:', error);
       showToast('Unable to save post', 'error');
     } finally {
       setSubmitting(false);

@@ -609,6 +609,23 @@ th {
   gap: 1rem;
 }
 
+.post-editor > label input {
+  width: 100%;
+}
+
+.post-editor .file-input-compact {
+  gap: 0.5rem;
+}
+
+.post-editor .file-input-compact input[type="file"] {
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  box-shadow: none;
+  font-size: 0.9rem;
+  width: auto;
+  max-width: 100%;
+}
+
 .post-editor__header {
   display: flex;
   align-items: center;
@@ -616,8 +633,17 @@ th {
   gap: 1rem;
 }
 
+.post-editor__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .post-editor__content textarea {
-  min-height: 220px;
+  min-height: 280px;
+  width: 100%;
+  line-height: 1.6;
+  font-size: 0.95rem;
 }
 
 .posts-panel {

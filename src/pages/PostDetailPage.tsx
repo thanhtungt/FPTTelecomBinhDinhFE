@@ -73,11 +73,7 @@ const PostDetailPage = () => {
             <h1>{post.title}</h1>
             <p className="post-card__date">{formatDate(post.publishedAt)}</p>
             {post.imageUrl && <img src={post.imageUrl} alt={post.title} className="post-detail__image" />}
-            <div className="post-detail__content">
-              {post.content.split('\n').map((line, idx) => (
-                <p key={idx}>{line}</p>
-              ))}
-            </div>
+            <div className="post-detail__content" dangerouslySetInnerHTML={{ __html: post.content }} />
           </article>
 
           {related.length > 0 && (

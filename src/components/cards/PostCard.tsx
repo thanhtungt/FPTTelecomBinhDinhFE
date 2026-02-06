@@ -12,7 +12,7 @@ const PostCard = ({ item }: PostCardProps) => (
       <p className="post-card__category">{item.category}</p>
       <h3>{item.title}</h3>
       <p className="post-card__date">{formatDate(item.publishedAt)}</p>
-      <p className="post-card__excerpt">{item.content.slice(0, 120)}...</p>
+      <p className="post-card__excerpt">{item.content.replace(/<[^>]*>/g, '').slice(0, 120)}...</p>
     </div>
     <Link to={`/posts/${item.slug}`} className="ghost-btn">
       Read story →
