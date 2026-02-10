@@ -92,26 +92,149 @@
   color: var(--muted);
 }
 
+/* Footer - Figma Design */
 .app-footer {
-  width: min(1200px, 100%);
+  background: #f8f9fa;
+  border-top: 1px solid var(--divider);
+  padding: 0;
+}
+
+.footer-container {
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem 1.5rem 3rem;
+  padding: 3rem 1.5rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 3rem;
+}
+
+/* Company Info Section */
+.footer-section--company {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-logo img {
+  height: 40px;
+  width: auto;
+}
+
+.footer-logo span {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.footer-section--company h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.footer-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.footer-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.footer-contact-item i,
+.footer-contact-item svg {
+  display: inline-block;
+  flex-shrink: 0;
+  font-size: 1rem;
+  width: 1.25rem;
+  color: var(--accent);
+}
+
+.footer-representative {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+/* Link Sections */
+.footer-section h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+
+.footer-links a {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: var(--accent);
+}
+
+/* Footer Bottom */
+.footer-bottom {
   border-top: 1px solid var(--divider);
+  padding: 1.5rem;
+  text-align: center;
+  background: #fff;
 }
 
-.app-footer__title {
-  font-weight: 600;
+.footer-bottom p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
 }
 
-.app-footer__meta {
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  font-size: 0.85rem;
-  color: var(--muted);
+/* Responsive */
+@media (max-width: 900px) {
+  .footer-container {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .footer-section--company {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
 }
 
 /* Buttons */
