@@ -9,63 +9,35 @@ const PackagesPage = () => {
   const [packages, setPackages] = useState<Package[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
-  // Load categories
+  // Load all data
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const data = await CategoryAPI.getAll();
-        setCategories(data);
-      } catch (error) {
-        console.error('[PackagesPage] Error loading categories:', error);
-      }
-    };
-    fetchCategories();
-  }, []);
-
-  // Load packages (filtered by category)
-  useEffect(() => {
-    let mounted = true;
-    const fetchPackages = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const data = await PackageAPI.getAll(selectedCategory || undefined);
-        if (!mounted) return;
-        setPackages(data);
+        const [categoriesData, packagesData] = await Promise.all([
+          CategoryAPI.getAll(),
+          PackageAPI.getAll()
+        ]);
+        setCategories(categoriesData);
+        setPackages(packagesData);
       } catch (error) {
-        console.error('[PackagesPage] Error loading packages:', error);
+        console.error('[PackagesPage] Error loading data:', error);
       } finally {
-        if (mounted) setLoading(false);
+        setLoading(false);
       }
     };
-    fetchPackages();
-    return () => {
-      mounted = false;
-    };
-  }, [selectedCategory]);
+    fetchData();
+  }, []);
+
+  // Group packages by category
+  const packagesByCategory = categories.map(category => ({
+    category,
+    packages: packages.filter(pkg => pkg.categoryId === category.id)
+  })).filter(group => group.packages.length > 0);
 
   return (
     <div className="page packages-page">
-      {/* Category tabs - Figma style */}
-      <div className="category-tabs">
-        <button
-          className={selectedCategory === null ? 'category-tab category-tab--active' : 'category-tab'}
-          onClick={() => setSelectedCategory(null)}
-        >
-          Tất cả
-        </button>
-        {categories.map((cat) => (
-          <button
-            key={cat.id}
-            className={selectedCategory === cat.id ? 'category-tab category-tab--active' : 'category-tab'}
-            onClick={() => setSelectedCategory(cat.id)}
-          >
-            {cat.name}
-          </button>
-        ))}
-      </div>
-
       <header className="page-header">
         <div>
           <p className="eyebrow">Gói cước</p>
@@ -75,14 +47,24 @@ const PackagesPage = () => {
 
       {loading && <p>Đang tải gói cước...</p>}
       {!loading && (
-        <div className="packages-grid">
-          {packages.map((item, index) => (
-            <PackageCard 
-              key={item.id} 
-              item={item} 
-              onSelect={() => {/* TODO: Open registration modal */}}
-              featured={index % 2 === 1} // Mark every other package as featured
-            />
+        <div className="packages-sections">
+          {packagesByCategory.map(({ category, packages: categoryPackages }) => (
+            <section key={category.id} className="category-section">
+              <h2 className="category-section-title">{category.name}</h2>
+              {category.description && (
+                <p className="category-section-description">{category.description}</p>
+              )}
+              <div className="packages-grid">
+                {categoryPackages.map((item, index) => (
+                  <PackageCard 
+                    key={item.id} 
+                    item={item} 
+                    onSelect={() => {/* TODO: Open registration modal */}}
+                    featured={index % 2 === 1}
+                  />
+                ))}
+              </div>
+            </section>
           ))}
         </div>
       )}
