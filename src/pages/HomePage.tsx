@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PackageAPI } from '../api/packages';
+import { CategoryAPI } from '../api/categories';
 import { PostAPI } from '../api/posts';
 import type { Package } from '../types/package';
+import type { Category } from '../types/category';
 import type { Post } from '../types/post';
 import PackageCard from '../components/cards/PackageCard';
 import PostCard from '../components/cards/PostCard';
@@ -14,17 +16,36 @@ import bannerWifi from '../assets/bannerfpttele2.png';
 
 const HomePage = () => {
   const [packages, setPackages] = useState<Package[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeBanner, setActiveBanner] = useState(0);
   const [isBannerPaused, setIsBannerPaused] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const navigate = useNavigate();
+
+  // Load categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await CategoryAPI.getAll();
+        setCategories(data);
+      } catch (error) {
+        console.error('[HomePage] Error loading categories:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     let mounted = true;
     const fetchData = async () => {
+      setLoading(true);
       try {
-        const [pkgList, postList] = await Promise.all([PackageAPI.getAll(), PostAPI.getAll()]);
+        const [pkgList, postList] = await Promise.all([
+          PackageAPI.getAll(selectedCategory || undefined),
+          PostAPI.getAll()
+        ]);
         if (!mounted) return;
         setPackages(pkgList);
         setPosts(postList.slice(0, 3));
@@ -39,7 +60,7 @@ const HomePage = () => {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [selectedCategory]);
 
   const banners = useMemo(
     () => [
@@ -158,13 +179,33 @@ const HomePage = () => {
             <h2>Chọn gói phù hợp với nhu cầu của bạn.</h2>
           </div>
           <button className="ghost-btn" onClick={() => navigate('/packages')}>
-            Xem tất cả →
+            Xem tất cả gói cước →
           </button>
         </div>
+        
+        {/* Category filter tabs */}
+        <div className="category-tabs">
+          <button
+            className={selectedCategory === null ? 'category-tab category-tab--active' : 'category-tab'}
+            onClick={() => setSelectedCategory(null)}
+          >
+            Tất cả
+          </button>
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              className={selectedCategory === cat.id ? 'category-tab category-tab--active' : 'category-tab'}
+              onClick={() => setSelectedCategory(cat.id)}
+            >
+              {cat.name}
+            </button>
+          ))}
+        </div>
+
         {loading && <p>Đang tải gói cước...</p>}
         {!loading && (
-          <div className="grid three">
-            {packages.slice(0, 3).map((item) => (
+          <div className={packages.length <= 2 ? 'packages-carousel packages-carousel--centered' : 'packages-carousel'}>
+            {packages.slice(0, 6).map((item) => (
               <PackageCard key={item.id} item={item} onSelect={() => navigate('/packages')} />
             ))}
           </div>

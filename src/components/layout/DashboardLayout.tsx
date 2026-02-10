@@ -12,7 +12,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     if (user.role === 'Admin') {
       return [
         { label: 'Registrations', path: '/dashboard/registrations'},
-        { label: 'Posts', path: '/dashboard/posts'}
+        { label: 'Posts', path: '/dashboard/posts'},
+        { label: 'Categories', path: '/dashboard/categories'},
+        { label: 'Packages', path: '/dashboard/packages'}
       ];
     }
     

@@ -1,31 +1,40 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PackageAPI } from '../api/packages';
+import { CategoryAPI } from '../api/categories';
 import type { Package } from '../types/package';
+import type { Category } from '../types/category';
 import PackageCard from '../components/cards/PackageCard';
-import QuickRegistrationForm from '../components/forms/QuickRegistrationForm';
-// cspell:ignore Mbps
-
-const speedOptions = [
-  { label: 'All speeds', value: 0 },
-  { label: '≥ 200 Mbps', value: 200 },
-  { label: '≥ 500 Mbps', value: 500 }
-];
 
 const PackagesPage = () => {
   const [packages, setPackages] = useState<Package[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  const [speed, setSpeed] = useState(0);
-  const [selected, setSelected] = useState<number | undefined>();
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
+  // Load categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await CategoryAPI.getAll();
+        setCategories(data);
+      } catch (error) {
+        console.error('[PackagesPage] Error loading categories:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  // Load packages (filtered by category)
   useEffect(() => {
     let mounted = true;
     const fetchPackages = async () => {
+      setLoading(true);
       try {
-        const data = await PackageAPI.getAll();
+        const data = await PackageAPI.getAll(selectedCategory || undefined);
         if (!mounted) return;
         setPackages(data);
       } catch (error) {
-        console.error(error);
+        console.error('[PackagesPage] Error loading packages:', error);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -34,41 +43,47 @@ const PackagesPage = () => {
     return () => {
       mounted = false;
     };
-  }, []);
-
-  const filtered = useMemo(() => packages.filter((item) => item.speedDown >= speed), [packages, speed]);
+  }, [selectedCategory]);
 
   return (
     <div className="page packages-page">
+      {/* Category tabs - Figma style */}
+      <div className="category-tabs">
+        <button
+          className={selectedCategory === null ? 'category-tab category-tab--active' : 'category-tab'}
+          onClick={() => setSelectedCategory(null)}
+        >
+          Tất cả
+        </button>
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            className={selectedCategory === cat.id ? 'category-tab category-tab--active' : 'category-tab'}
+            onClick={() => setSelectedCategory(cat.id)}
+          >
+            {cat.name}
+          </button>
+        ))}
+      </div>
+
       <header className="page-header">
         <div>
           <p className="eyebrow">Gói cước</p>
           <h1>Được thiết kế cho tải lên đồng bộ, luồng trực tiếp và làm việc luôn.</h1>
         </div>
-        <div className="filter-group">
-          {speedOptions.map((option) => (
-            <button
-              key={option.value}
-              className={speed === option.value ? 'chip active' : 'chip'}
-              onClick={() => setSpeed(option.value)}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
       </header>
 
       {loading && <p>Đang tải gói cước...</p>}
       {!loading && (
-        <div className="packages-layout">
-          <div className="grid two">
-            {filtered.map((item) => (
-              <PackageCard key={item.id} item={item} onSelect={() => setSelected(item.id)} />
-            ))}
-          </div>
-          <div className="sticky-form">
-            <QuickRegistrationForm packages={packages} selectedPackageId={selected} />
-          </div>
+        <div className="packages-grid">
+          {packages.map((item, index) => (
+            <PackageCard 
+              key={item.id} 
+              item={item} 
+              onSelect={() => {/* TODO: Open registration modal */}}
+              featured={index % 2 === 1} // Mark every other package as featured
+            />
+          ))}
         </div>
       )}
     </div>

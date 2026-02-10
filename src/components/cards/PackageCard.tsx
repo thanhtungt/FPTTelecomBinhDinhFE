@@ -4,24 +4,74 @@ import { formatCurrency } from '../../utils/format';
 interface PackageCardProps {
   item: Package;
   onSelect?: (pkg: Package) => void;
+  featured?: boolean;
 }
 
-const PackageCard = ({ item, onSelect }: PackageCardProps) => (
-  <article className="package-card">
-    <div className="package-card__header">
-      <p className="package-card__speed">{item.speedDown} / {item.speedUp} Mbps</p>
-      <h3>{item.name}</h3>
-      <p className="package-card__price">{formatCurrency(item.priceMonthly)}/tháng</p>
-    </div>
-    <ul>
-      <li>{item.promotionText}</li>
-      <li>{item.deviceBonus}</li>
-      <li>Đăng ký lắp đặt trong 48h</li>
-    </ul>
-    <button className="secondary-btn" onClick={() => onSelect?.(item)}>
-      Đăng ký gói
-    </button>
-  </article>
-);
+const PackageCard = ({ item, onSelect, featured = false }: PackageCardProps) => {
+  return (
+    <article className={`package-card ${featured ? 'package-card--featured' : ''}`}>
+      {/* Header with image */}
+      <div className="package-card__image-wrapper">
+        {featured && (
+          <div className="package-card__badge">
+            <span>Phổ biến ⚡</span>
+          </div>
+        )}
+        {item.imageUrl ? (
+          <img src={item.imageUrl} alt={item.name} className="package-card__image" />
+        ) : (
+          <div className="package-card__placeholder">
+            <div className="package-card__placeholder-icon">📡</div>
+          </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="package-card__content">
+        <h3 className="package-card__title">{item.name}</h3>
+        
+        <div className="package-card__pricing">
+          <span className="package-card__pricing-label">Chỉ từ</span>
+          <div className="package-card__pricing-amount">
+            <strong>{formatCurrency(item.priceMonthly)}</strong>
+            <span>/tháng</span>
+          </div>
+        </div>
+
+        {/* Features list with checkmarks */}
+        <ul className="package-card__features">
+          <li className="package-card__feature">
+            <span className="package-card__check">✓</span>
+            <span>Tốc độ tải xuống {item.speedDown} Mbps</span>
+          </li>
+          <li className="package-card__feature">
+            <span className="package-card__check">✓</span>
+            <span>Tốc độ tải lên {item.speedUp} Mbps</span>
+          </li>
+          {item.promotionText && (
+            <li className="package-card__feature">
+              <span className="package-card__check">✓</span>
+              <span>{item.promotionText}</span>
+            </li>
+          )}
+          {item.deviceBonus && (
+            <li className="package-card__feature">
+              <span className="package-card__check">✓</span>
+              <span>{item.deviceBonus}</span>
+            </li>
+          )}
+        </ul>
+
+        {/* Actions */}
+        <div className="package-card__actions">
+          <button className="package-card__link">Xem chi tiết</button>
+          <button className="package-card__cta" onClick={() => onSelect?.(item)}>
+            Đăng ký ngay
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+};
 
 export default PackageCard;
