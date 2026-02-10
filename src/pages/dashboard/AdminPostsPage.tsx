@@ -28,7 +28,7 @@ const AdminPostsPage = () => {
         setPosts(data);
       } catch (error) {
         console.error(error);
-        showToast('Unable to load posts', 'error');
+        showToast('Không thể tải tin tức', 'error');
       } finally {
         setLoading(false);
       }
@@ -51,10 +51,10 @@ const AdminPostsPage = () => {
     try {
       await PostAPI.remove(post.id);
       setPosts((prev) => prev.filter((item) => item.id !== post.id));
-      showToast('Post deleted', 'success');
+      showToast('Bài viết đã được xóa', 'success');
     } catch (error) {
       console.error(error);
-      showToast('Unable to delete post', 'error');
+      showToast('Không thể xóa bài viết', 'error');
     }
   };
 
@@ -74,11 +74,11 @@ const AdminPostsPage = () => {
     <div className="container">
       <header className="section-header">
         <div>
-          <p className="eyebrow">Content management</p>
-          <h1>Posts</h1>
+          <p className="eyebrow">Quản lý nội dung</p>
+          <h1>Bài đăng</h1>
         </div>
         <button type="button" className="primary-btn" onClick={handleCreateNew}>
-          + New Post
+          + Tạo bài đăng mới
         </button>
       </header>
 
@@ -99,27 +99,27 @@ const AdminPostsPage = () => {
         <div className="posts-panel__controls">
           <input
             type="search"
-            placeholder="Search by title"
+            placeholder="Tìm kiếm theo tiêu đề"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
           />
           <button type="button" className="ghost-btn" onClick={handleRefresh} disabled={loading}>
-            Refresh
+            Tải lại
           </button>
         </div>
         {loading ? (
           <PostTableSkeleton />
         ) : filteredPosts.length === 0 ? (
-          <p className="empty-state">No posts found.</p>
+          <p className="empty-state">Không tìm thấy bài đăng.</p>
         ) : (
           <div className="table-wrapper">
             <table>
               <thead>
                 <tr>
-                  <th>Title</th>
-                  <th>Category</th>
-                  <th>Published</th>
-                  <th>Actions</th>
+                  <th>Tiêu đề</th>
+                  <th>Loại</th>
+                  <th>Thời Gian Đăng</th>
+                  <th>Thao tác</th>
                 </tr>
               </thead>
               <tbody>
@@ -138,17 +138,17 @@ const AdminPostsPage = () => {
                     <td>
                       <div className="table-actions">
                         <button type="button" className="ghost-btn" onClick={() => handleEdit(item)}>
-                          Edit
+                          Sửa
                         </button>
                         <button type="button" className="danger-btn" onClick={() => handleDelete(item)}>
-                          Delete
+                          Xóa
                         </button>
                         <button 
                           type="button" 
                           className="ghost-btn" 
                           onClick={() => window.open(`/posts/${item.slug}`, '_blank')}
                         >
-                          View
+                          Xem
                         </button>
                       </div>
                     </td>

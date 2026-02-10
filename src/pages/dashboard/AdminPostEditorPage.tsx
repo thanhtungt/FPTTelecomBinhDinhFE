@@ -26,7 +26,7 @@ const AdminPostEditorPage = () => {
         setPost(data);
       } catch (error) {
         console.error('[AdminPostEditorPage] Error fetching post:', error);
-        showToast('Unable to load post', 'error');
+        showToast('Không thể tải bài viết', 'error');
         navigate('/dashboard/posts');
       } finally {
         setLoading(false);
@@ -52,15 +52,15 @@ const AdminPostEditorPage = () => {
     try {
       if (isEditMode && post) {
         await PostAPI.update(post.id, values);
-        showToast('Post updated successfully', 'success');
+        showToast('Bài viết đã được cập nhật', 'success');
       } else {
         await PostAPI.create(values);
-        showToast('Post published successfully', 'success');
+        showToast('Bài viết đã được đăng', 'success');
       }
       navigate('/dashboard/posts');
     } catch (error) {
       console.error('[AdminPostEditorPage] Error:', error);
-      showToast('Unable to save post', 'error');
+      showToast('Không thể lưu bài viết', 'error');
     } finally {
       setSubmitting(false);
     }
@@ -73,7 +73,7 @@ const AdminPostEditorPage = () => {
   if (loading) {
     return (
       <div className="container">
-        <p>Loading post...</p>
+        <p>Đang tải bài viết...</p>
       </div>
     );
   }

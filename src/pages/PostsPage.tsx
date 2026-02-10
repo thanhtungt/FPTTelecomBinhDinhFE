@@ -26,7 +26,7 @@ const PostsPage = () => {
         setPosts(data);
       } catch (error) {
         console.error(error);
-        showToast('Unable to load stories', 'error');
+        showToast('Không thể tải tin tức', 'error');
       } finally {
         setLoading(false);
       }
@@ -44,14 +44,14 @@ const PostsPage = () => {
     return posts.filter((item) => item.title.toLowerCase().includes(keyword));
   }, [posts, search]);
 
-  const title = useMemo(() => filterOptions.find((item) => item.value === category)?.label ?? 'Stories', [category]);
+  const title = useMemo(() => filterOptions.find((item) => item.value === category)?.label ?? 'Tin tức', [category]);
 
   return (
     <div className="page posts-page">
       <header className="page-header">
         <div>
-          <p className="eyebrow">Stories</p>
-          <h1>{title} from FPT team.</h1>
+          <p className="eyebrow">Tin tức</p>
+          <h1>{title} từ đội ngũ FPT.</h1>
         </div>
         <div className="posts-page__controls">
           <div className="filter-group">
@@ -63,7 +63,7 @@ const PostsPage = () => {
           </div>
           <input
             type="search"
-            placeholder="Search title..."
+            placeholder="Tìm kiếm tiêu đề..."
             value={search}
             onChange={(event) => setSearch(event.target.value)}
           />
@@ -76,7 +76,7 @@ const PostsPage = () => {
           ))}
         </div>
       ) : filteredPosts.length === 0 ? (
-        <p className="empty-state">No stories match your search.</p>
+        <p className="empty-state">Không tìm thấy tin tức.</p>
       ) : (
         <div className="grid two">
           {filteredPosts.map((item) => (

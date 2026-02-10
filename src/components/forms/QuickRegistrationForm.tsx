@@ -73,27 +73,27 @@ const QuickRegistrationForm = ({ packages, selectedPackageId, onSuccess }: Quick
   return (
     <form className="quick-form" onSubmit={handleSubmit(onSubmit)}>
       <div className="quick-form__header">
-        <h3>Book Installation</h3>
-        <p>Leave your contact and we will arrange the fastest installation slot.</p>
+        <h3>Đăng ký lắp đặt</h3>
+        <p>Để lại thông tin và chúng tôi sẽ sắp xếp thời gian lắp đặt nhanh nhất.</p>
       </div>
       <div className="form-grid">
         <label>
-          <span>Full Name</span>
-          <input type="text" placeholder="Nguyen Van A" {...register('fullName')} />
+          <span>Họ và tên</span>
+          <input type="text" placeholder="Nguyễn Văn A" {...register('fullName')} />
           {errors.fullName && <small>{errors.fullName.message}</small>}
         </label>
         <label>
-          <span>Phone</span>
+          <span>Số điện thoại</span>
           <input type="tel" placeholder="0912 345 678" {...register('phone')} />
           {errors.phone && <small>{errors.phone.message}</small>}
         </label>
         <label className="full">
-          <span>Address</span>
-          <input type="text" placeholder="123 Le Loi, Quy Nhon" {...register('address')} />
+          <span>Địa chỉ</span>
+          <input type="text" placeholder="123 Lê Lợi, Quy Nhơn" {...register('address')} />
           {errors.address && <small>{errors.address.message}</small>}
         </label>
         <label>
-          <span>Package</span>
+          <span>Gói</span>
           <select {...register('packageId')}>
             <option value="">Select</option>
             {packages.map((pkg) => (
@@ -105,13 +105,13 @@ const QuickRegistrationForm = ({ packages, selectedPackageId, onSuccess }: Quick
           {errors.packageId && <small>{errors.packageId.message}</small>}
         </label>
         <label className="full">
-          <span>Note</span>
-          <textarea rows={3} placeholder="Preferred time, floors, mesh nodes..." {...register('note')} />
+          <span>Ghi chú</span>
+          <textarea rows={3} placeholder="Thời gian, tầng, node..." {...register('note')} />
         </label>
       </div>
       {serverMessage && <p className="form-alert">{serverMessage}</p>}
       <button type="submit" className="primary-btn" disabled={submitting}>
-        {submitting ? 'Sending...' : 'Request a Call' }
+        {submitting ? 'Đang gửi...' : 'Đăng ký' }
       </button>
     </form>
   );

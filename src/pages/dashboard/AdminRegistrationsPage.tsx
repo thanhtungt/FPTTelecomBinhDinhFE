@@ -7,11 +7,11 @@ import { formatCurrency, formatDate } from '../../utils/format';
 
 const statusFilters: Array<{ label: string; value?: RegistrationStatus }> = [
   { label: 'All', value: undefined },
-  { label: 'Pending', value: 'pending' },
-  { label: 'Contacting', value: 'contacting' },
-  { label: 'Need survey', value: 'need_survey' },
-  { label: 'Installed', value: 'installed' },
-  { label: 'Done', value: 'done' }
+  { label: 'Đang chờ', value: 'pending' },
+  { label: 'Liên hệ', value: 'contacting' },
+  { label: 'Đang khảo sát', value: 'need_survey' },
+  { label: 'Đã lắp đặt', value: 'installed' },
+  { label: 'Hoàn thành', value: 'done' }
 ];
 
 const AdminRegistrationsPage = () => {
@@ -27,7 +27,7 @@ const AdminRegistrationsPage = () => {
       const data = await RegistrationAPI.getAll(status);
       setRegistrations(data);
     } catch (err) {
-      setError('Unable to load registrations');
+      setError('Không thể tải đăng ký');
       console.error(err);
     } finally {
       setLoading(false);
@@ -43,30 +43,30 @@ const AdminRegistrationsPage = () => {
       const updated = await RegistrationAPI.updateStatus(registration.id, { status: next });
       setRegistrations((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
     } catch (err) {
-      setError('Cannot update status. Check allowed transitions.');
+      setError('Không thể cập nhật trạng thái. Kiểm tra các chuyển đổi hợp lệ.');
       console.error(err);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm('Delete this registration?')) return;
+    if (!window.confirm('Xóa đăng ký này?')) return;
     try {
       await RegistrationAPI.remove(id);
       setRegistrations((prev) => prev.filter((item) => item.id !== id));
     } catch (err) {
-      setError('Unable to delete registration.');
+      setError('Không thể xóa đăng ký.');
       console.error(err);
     }
   };
 
   const handleAssign = async (id: number) => {
-    const staffId = window.prompt('Enter staff ID to assign');
+    const staffId = window.prompt('Nhập ID nhân viên để gán');
     if (!staffId) return;
     try {
       const updated = await RegistrationAPI.assignStaff(id, Number(staffId));
       setRegistrations((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
     } catch (err) {
-      setError('Unable to assign staff.');
+      setError('Không thể gán nhân viên.');
       console.error(err);
     }
   };
@@ -75,8 +75,8 @@ const AdminRegistrationsPage = () => {
     <div className="page dashboard-page">
       <header className="page-header">
         <div>
-          <p className="eyebrow">Operations</p>
-          <h1>Registration board</h1>
+          <p className="eyebrow">Hoạt động</p>
+          <h1>Đăng ký</h1>
         </div>
         <div className="filter-group">
           {statusFilters.map((item) => (
@@ -92,19 +92,19 @@ const AdminRegistrationsPage = () => {
       </header>
       {error && <p className="form-alert">{error}</p>}
       {loading ? (
-        <p>Loading board...</p>
+        <p>Đang tải bảng...</p>
       ) : (
         <div className="table-wrapper">
           <table>
             <thead>
               <tr>
-                <th>Customer</th>
-                <th>Contact</th>
-                <th>Package</th>
-                <th>Status</th>
-                <th>Staff</th>
-                <th>Updated</th>
-                <th>Actions</th>
+                <th>Khách hàng</th>
+                <th>Liên hệ</th>
+                <th>Khối lượng</th>
+                <th>Trạng thái</th>
+                <th>Nhân viên</th>
+                <th>Cập nhật</th>
+                <th>Thao tác</th>
               </tr>
             </thead>
             <tbody>
@@ -118,7 +118,7 @@ const AdminRegistrationsPage = () => {
                     </td>
                     <td>
                       <p>{item.phone}</p>
-                      <small>{item.userName ?? 'Guest'}</small>
+                      <small>{item.userName ?? 'Khách'}</small>
                     </td>
                     <td>
                       <p>{item.packageName}</p>
@@ -128,7 +128,7 @@ const AdminRegistrationsPage = () => {
                       <StatusBadge status={item.status as RegistrationStatus} />
                     </td>
                     <td>
-                      <p>{item.assignedStaffName ?? 'Unassigned'}</p>
+                      <p>{item.assignedStaffName ?? 'Chưa gán'}</p>
                       <small>{item.assignedStaffId ? `ID ${item.assignedStaffId}` : ''}</small>
                     </td>
                     <td>
@@ -139,7 +139,7 @@ const AdminRegistrationsPage = () => {
                         {transitions.length > 0 && (
                           <select onChange={(e) => handleStatusChange(item, e.target.value as RegistrationStatus)} defaultValue="">
                             <option value="" disabled>
-                              Advance status
+                              Cập nhật trạng thái
                             </option>
                             {transitions.map((status) => (
                               <option key={status} value={status}>
@@ -149,10 +149,10 @@ const AdminRegistrationsPage = () => {
                           </select>
                         )}
                         <button className="ghost-btn" onClick={() => handleAssign(item.id)}>
-                          Assign
+                          Gán nhân viên
                         </button>
                         <button className="danger-btn" onClick={() => handleDelete(item.id)}>
-                          Delete
+                          Xóa
                         </button>
                       </div>
                     </td>

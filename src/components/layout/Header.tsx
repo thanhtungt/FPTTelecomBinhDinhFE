@@ -4,9 +4,9 @@ import { useAuth } from '../../hooks/useAuth';
 import fptTelecomLogo from '../../assets/fpt-telecom-logo.png';
 
 const navItems = [
-  { label: 'Home', path: '/' },
-  { label: 'Packages', path: '/packages' },
-  { label: 'Stories', path: '/posts' }
+  { label: 'Trang Chủ', path: '/' },
+  { label: 'Dịch Vụ', path: '/packages' },
+  { label: 'Tin Tức & Khuyến Mãi', path: '/posts' }
 ];
 
 const Header = () => {
@@ -92,7 +92,7 @@ const Header = () => {
             to={getDashboardPath()!} 
             className={({ isActive }) => (isActive ? 'active' : '')}
           >
-            Dashboard
+            Bảng điều khiển
           </NavLink>
         )}
         {user && user.role !== 'Admin' && user.role !== 'Staff' && (
@@ -100,7 +100,7 @@ const Header = () => {
             to="/dashboard/my-registrations" 
             className={({ isActive }) => (isActive ? 'active' : '')}
           >
-            My Orders
+            Đơn hàng của tôi
           </NavLink>
         )}
       </nav>
@@ -108,10 +108,10 @@ const Header = () => {
         {!isAuthenticated ? (
           <>
             <button className="ghost-btn" onClick={() => navigate('/login')}>
-              Login
+              Đăng nhập
             </button>
             <button className="primary-btn" onClick={() => navigate('/register')}>
-              Register
+              Đăng ký
             </button>
           </>
         ) : (
@@ -121,7 +121,7 @@ const Header = () => {
               <small>{user?.role}</small>
             </div>
             <button className="ghost-btn" onClick={handleLogout}>
-              Logout
+              Đăng xuất
             </button>
           </>
         )}

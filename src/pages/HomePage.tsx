@@ -125,17 +125,17 @@ const HomePage = () => {
       <section className="hero">
         <div className="hero__text">
           <p className="eyebrow">FPT Quy Nhon fiber network</p>
-          <h1>Launch bold ideas with unconstrained internet.</h1>
+          <h1>Khởi động những ý tưởng táo bạo với internet không giới hạn.</h1>
           <p>
-            Dedicated connectivity packages, pro installation workflow, and same-day support team for studios,
-            cafes, and premium households across Binh Dinh.
+            Gói kết nối chuyên dụng, quy trình lắp đặt chuyên nghiệp, và đội ngũ hỗ trợ chuyên nghiệp cho các phòng
+            studio, quán cà phê và các gia đình cao cấp khắp Bình Định.
           </p>
           <div className="hero__actions">
             <button className="primary-btn" onClick={() => navigate('/packages')}>
-              Explore packages
+              Xem gói
             </button>
             <button className="ghost-btn" onClick={() => navigate('/posts')}>
-              Stories and updates
+              Tin Tức & Khuyến Mãi
             </button>
           </div>
           {heroPackage && (
@@ -154,14 +154,14 @@ const HomePage = () => {
       <section className="packages-section">
         <div className="section-header">
           <div>
-            <p className="eyebrow">Performance tiers</p>
-            <h2>Pick a plan engineered for streaming, gaming, or creative uploads.</h2>
+            <p className="eyebrow">Các gói</p>
+            <h2>Chọn gói phù hợp với nhu cầu của bạn.</h2>
           </div>
           <button className="ghost-btn" onClick={() => navigate('/packages')}>
-            View all →
+            Xem tất cả →
           </button>
         </div>
-        {loading && <p>Loading packages...</p>}
+        {loading && <p>Đang tải gói cước...</p>}
         {!loading && (
           <div className="grid three">
             {packages.slice(0, 3).map((item) => (
@@ -174,14 +174,14 @@ const HomePage = () => {
       <section className="posts-section">
         <div className="section-header">
           <div>
-            <p className="eyebrow">Stories from the field</p>
-            <h2>Installations, product drops, and behind-the-scenes upgrades.</h2>
+            <p className="eyebrow">Tin tức & Khuyến mãi</p>
+            <h2>Lắp đặt, ra mắt sản phẩm và nâng cấp hậu trường.</h2>
           </div>
           <button className="ghost-btn" onClick={() => navigate('/posts')}>
-            All stories →
+            Xem tất cả →
           </button>
         </div>
-        {loading && <p>Loading stories...</p>}
+        {loading && <p>Đang tải tin tức...</p>}
         {!loading && (
           <div className="grid three">
             {posts.map((item) => (
@@ -193,24 +193,24 @@ const HomePage = () => {
 
       <section className="cta-section">
         <div>
-          <p className="eyebrow">Installation DNA</p>
-          <h2>We plan, survey, install, and activate in less than 72 hours.</h2>
+          <p className="eyebrow">DNA lắp đặt</p>
+          <h2>Chúng tôi lập kế hoạch, khảo sát, lắp đặt và kích hoạt trong vòng 72 giờ.</h2>
           <p>
-            Dedicated staff follow a transparent status board with proactive updates so you always know what is next.
+            Nhân viên chuyên nghiệp theo dõi bảng trạng thái với các cập nhật chủ động để bạn luôn biết được điều gì tiếp theo.
           </p>
         </div>
         <div className="stats">
           <div>
             <strong>48h</strong>
-            <span>Average survey window</span>
+            <span>Khảo sát trung bình</span>
           </div>
           <div>
             <strong>320+</strong>
-            <span>Homes upgraded in 2025</span>
+            <span>Khách hàng nâng cấp trong năm 2025</span>
           </div>
           <div>
             <strong>12</strong>
-            <span>Specialist staff on duty</span>
+            <span>Đội ngũ chuyên nghiệp</span>
           </div>
         </div>
       </section>

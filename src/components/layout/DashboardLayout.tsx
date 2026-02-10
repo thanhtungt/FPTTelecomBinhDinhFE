@@ -11,19 +11,19 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     
     if (user.role === 'Admin') {
       return [
-        { label: 'Registrations', path: '/dashboard/registrations', icon: '📋' },
-        { label: 'Posts', path: '/dashboard/posts', icon: '📝' }
+        { label: 'Registrations', path: '/dashboard/registrations'},
+        { label: 'Posts', path: '/dashboard/posts'}
       ];
     }
     
     if (user.role === 'Staff') {
       return [
-        { label: 'Registrations', path: '/dashboard/registrations', icon: '📋' }
+        { label: 'Đơn đăng ký', path: '/dashboard/registrations', icon: '📋' }
       ];
     }
     
     return [
-      { label: 'My Orders', path: '/dashboard/my-registrations', icon: '🛒' }
+      { label: 'Đơn đăng ký', path: '/dashboard/my-registrations', icon: '🛒' }
     ];
   }, [user]);
 
@@ -51,18 +51,18 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 `dashboard-nav-item ${isActive ? 'active' : ''}`
               }
             >
-              <span className="dashboard-nav-item__icon">{item.icon}</span>
+              {/* <span className="dashboard-nav-item__icon">{item.icon}</span> */}
               <span className="dashboard-nav-item__label">{item.label}</span>
             </NavLink>
           ))}
         </nav>
 
-        <div className="dashboard-sidebar__footer">
+        {/* <div className="dashboard-sidebar__footer">
           <button className="dashboard-logout-btn" onClick={handleLogout}>
             <span className="dashboard-nav-item__icon">🚪</span>
-            <span className="dashboard-nav-item__label">Logout</span>
+            <span className="dashboard-nav-item__label">Đăng xuất</span>
           </button>
-        </div>
+        </div> */}
       </aside>
 
       <main className="dashboard-content">

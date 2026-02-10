@@ -9,12 +9,13 @@ type StoredAuth = {
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 30000, // Increased to 30s for large content (was 10s)
   headers: {
     'Content-Type': 'application/json'
   }
 });
 
+// Request interceptor - Add auth token if available
 api.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
     const raw = window.localStorage.getItem(AUTH_STORAGE_KEY);
@@ -32,6 +33,24 @@ api.interceptors.request.use((config) => {
 
   return config;
 });
+
+// Response interceptor - Handle errors including timeout
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Handle timeout specifically for large content
+    if (error.code === 'ECONNABORTED' && error.message.includes('timeout')) {
+      console.error('[API] Request timeout - content too large or slow backend. Consider enabling compression on backend.');
+    }
+    
+    // Handle 401 Unauthorized
+    if (error.response?.status === 401 && typeof window !== 'undefined') {
+      window.localStorage.removeItem(AUTH_STORAGE_KEY);
+    }
+    
+    return Promise.reject(error);
+  }
+);
 
 export default api;
 export { AUTH_STORAGE_KEY };

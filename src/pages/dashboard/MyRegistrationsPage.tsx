@@ -32,8 +32,8 @@ const MyRegistrationsPage = () => {
     <div className="page my-registrations">
       <header className="page-header">
         <div>
-          <p className="eyebrow">My installations</p>
-          <h1>Track every milestone in real-time.</h1>
+          <p className="eyebrow">Đơn đăng ký của tôi</p>
+          <h1> Theo dõi các đơn đăng ký của bạn</h1>
         </div>
       </header>
       {loading && <p>Loading registrations...</p>}
@@ -50,13 +50,13 @@ const MyRegistrationsPage = () => {
             </header>
             <div className="registration-card__meta">
               <p>
-                <strong>Address:</strong> {item.address}
+                <strong>Địa chỉ:</strong> {item.address}
               </p>
               <p>
-                <strong>Updated:</strong> {formatDate(item.updatedAt)}
+                <strong>Ngày cập nhật:</strong> {formatDate(item.updatedAt)}
               </p>
               <p>
-                <strong>Staff:</strong> {item.assignedStaffName ?? 'Pending assignment'}
+                <strong>Nhân viên:</strong> {item.assignedStaffName ?? 'Chưa giao phó'}
               </p>
             </div>
             <RegistrationTimeline current={item.status} />

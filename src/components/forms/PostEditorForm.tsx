@@ -5,29 +5,29 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { PostPayload } from '../../types/post';
 import { POST_CATEGORY_OPTIONS, POST_CATEGORY_VALUES } from '../../constants/posts';
-import RichTextEditor from './RichTextEditor';
+import RichTextEditor from './RichTextEditor.lazy';
 
 const categoryValues = POST_CATEGORY_VALUES;
 
 const formSchema = z.object({
-  title: z.string().min(6, 'Title must be at least 6 characters'),
+  title: z.string().min(6, 'Tiêu đề phải có ít nhất 6 ký tự'),
   category: z.enum(categoryValues),
   imageUrl: z
     .string()
     .trim()
     .refine((val) => !val || /^https?:\/\//.test(val), {
-      message: 'Image URL must start with http(s)'
+      message: 'URL hình ảnh phải bắt đầu bằng http(s)'
     }),
   content: z
     .string()
-    .min(1, 'Content is required')
+    .min(1, 'Nội dung là bắt buộc')
     .refine(
       (html) => {
         // Strip HTML tags and check plain text length
         const text = html.replace(/<[^>]*>/g, '').trim();
         return text.length >= 50;
       },
-      { message: 'Content must be at least 50 characters' }
+      { message: 'Nội dung phải có ít nhất 50 ký tự' }
     )
 });
 
@@ -80,7 +80,6 @@ const PostEditorForm = ({
   }, [initialValues, reset]);
 
   const handleFormSubmit: SubmitHandler<FormValues> = (values) => {
-    console.log('[PostEditorForm] Form submitted with values:', values);
     const normalizedImage = values.imageUrl.trim();
     const payload: PostPayload = {
       title: values.title.trim(),
@@ -88,7 +87,6 @@ const PostEditorForm = ({
       content: values.content.trim(),
       imageUrl: normalizedImage ? normalizedImage : undefined
     };
-    console.log('[PostEditorForm] Payload to send:', payload);
 
     return onSubmit(payload);
   };
@@ -97,23 +95,23 @@ const PostEditorForm = ({
     <form className="post-editor" onSubmit={handleSubmit(handleFormSubmit)}>
       <div className="post-editor__header">
         <div>
-          <p className="eyebrow">{isEditMode ? 'Update story' : 'Share story'}</p>
-          <h2>{isEditMode ? 'Edit article' : 'New article'}</h2>
+          <p className="eyebrow">{isEditMode ? 'Cập nhật bài viết' : 'Chia sẻ bài viết'}</p>
+          <h2>{isEditMode ? 'Sửa bài viết' : 'Bài viết mới'}</h2>
         </div>
         {isEditMode && onCancel && (
           <button type="button" className="ghost-btn" onClick={onCancel}>
-            Cancel edit
+            Thoát chỉnh sửa
           </button>
         )}
       </div>
       <label>
-        <span>Title</span>
-        <input type="text" placeholder="Fiber installs 2024 recap" {...register('title')} />
+        <span>Tiêu đề</span>
+        <input type="text" placeholder="Tiêu đề" {...register('title')} />
         {errors.title && <small>{errors.title.message}</small>}
       </label>
       <div className="form-grid">
         <label>
-          <span>Category</span>
+          <span>Loại</span>
           <select {...register('category')}>
             {POST_CATEGORY_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -124,23 +122,21 @@ const PostEditorForm = ({
           {errors.category && <small>{errors.category.message}</small>}
         </label>
         <label>
-          <span>Hero image URL</span>
+          <span>URL hình ảnh</span>
           <input type="url" placeholder="https://cdn.fpttelecom.vn/story.png" {...register('imageUrl')} />
           {errors.imageUrl && <small>{errors.imageUrl.message}</small>}
         </label>
       </div>
       <div className="post-editor__content">
-        <span>Content</span>
+        <span>Nội dung</span>
         <Controller
           name="content"
           control={control}
           render={({ field }) => {
-            console.log('[Controller] Current field value length:', field.value?.length || 0);
             return (
               <RichTextEditor
                 value={field.value}
                 onChange={(content) => {
-                  console.log('[Controller] onChange called with content length:', content.length, 'preview:', content.substring(0, 50));
                   field.onChange(content);
                 }}
                 placeholder="Write your story here... Use formatting tools to style your content."
@@ -151,7 +147,7 @@ const PostEditorForm = ({
         />
       </div>
       <button type="submit" className="primary-btn" disabled={submitting}>
-        {submitting ? 'Saving...' : isEditMode ? 'Update post' : 'Publish post'}
+        {submitting ? 'Saving...' : isEditMode ? 'Cập nhật bài viết' : 'Đăng bài viết'}
       </button>
     </form>
   );

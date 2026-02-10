@@ -10,11 +10,30 @@ interface RichTextEditorProps {
   error?: string;
 }
 
+// Debounce helper for onChange
+const debounce = <T extends (...args: any[]) => void>(func: T, wait: number): ((...args: Parameters<T>) => void) => {
+  let timeout: ReturnType<typeof setTimeout> | null = null;
+  return (...args: Parameters<T>) => {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+};
+
+// Use requestIdleCallback polyfill for older browsers
+const scheduleIdleCallback = (callback: () => void) => {
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(callback, { timeout: 100 });
+  } else {
+    setTimeout(callback, 0);
+  }
+};
+
 const RichTextEditor = ({ value, onChange, placeholder = 'Write your content here...', error }: RichTextEditorProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const quillRef = useRef<Quill | null>(null);
   const onChangeRef = useRef(onChange);
   const [isInitialized, setIsInitialized] = useState(false);
+  const isUpdatingRef = useRef(false);
 
   // Keep onChange ref up to date
   useEffect(() => {
@@ -23,8 +42,6 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Write your content her
 
   useEffect(() => {
     if (!editorRef.current || quillRef.current) return;
-
-    console.log('[RichTextEditor] Initializing Quill editor');
     
     // Clear any existing content to prevent duplicate toolbars
     editorRef.current.innerHTML = '';
@@ -47,24 +64,26 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Write your content her
     });
 
     quillRef.current = quill;
-    console.log('[RichTextEditor] Quill initialized, ref stored');
 
-    // Handle user changes
-    console.log('[RichTextEditor] Binding text-change event');
-    quill.on('text-change', () => {
-      console.log('[RichTextEditor] text-change event fired!');
+    // Debounced onChange to reduce re-renders during typing
+    const debouncedOnChange = debounce(() => {
+      if (isUpdatingRef.current) return;
       const html = quill.root.innerHTML;
       const text = quill.getText().trim();
       const contentToSend = text.length > 0 ? html : '';
-      console.log('[RichTextEditor] Calling onChangeRef with:', contentToSend.substring(0, 50));
       onChangeRef.current(contentToSend);
+    }, 300);
+
+    // Handle user changes
+    quill.on('text-change', (_delta, _oldDelta, source) => {
+      if (source === 'user') {
+        debouncedOnChange();
+      }
     });
 
     setIsInitialized(true);
-    console.log('[RichTextEditor] Initialization complete');
 
     return () => {
-      console.log('[RichTextEditor] Cleanup - removing text-change listener');
       quill.off('text-change');
       // Clear DOM to remove Quill-generated elements (toolbar, etc)
       if (editorRef.current) {
@@ -101,29 +120,28 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Write your content her
 
     // Update if the normalized HTML is different
     if (normalizedValue !== normalizedCurrent) {
-      const selection = quill.getSelection();
+      isUpdatingRef.current = true;
       
-      if (valueIsEmpty) {
-        // Clear the editor
-        quill.setText('');
-        console.log('[RichTextEditor] Clearing content');
-        onChangeRef.current('');
-      } else {
-        // Set the new content
-        const delta = quill.clipboard.convert({ html: value });
-        quill.setContents(delta, 'silent');
-        // Trigger onChange to sync with form after programmatic update
-        const html = quill.root.innerHTML;
-        const text = quill.getText().trim();
-        const contentToSend = text.length > 0 ? html : '';
-        console.log('[RichTextEditor] Syncing content to form:', { text: text.substring(0, 50), html: contentToSend.substring(0, 100) });
-        onChangeRef.current(contentToSend);
-      }
-      
-      // Restore selection if it existed
-      if (selection) {
-        quill.setSelection(selection);
-      }
+      // Use requestIdleCallback for non-blocking updates
+      scheduleIdleCallback(() => {
+        const selection = quill.getSelection();
+        
+        if (valueIsEmpty) {
+          // Clear the editor
+          quill.setText('');
+        } else {
+          // Set the new content asynchronously
+          const delta = quill.clipboard.convert({ html: value });
+          quill.setContents(delta, 'silent');
+        }
+        
+        // Restore selection if it existed
+        if (selection) {
+          quill.setSelection(selection);
+        }
+        
+        isUpdatingRef.current = false;
+      });
     }
   }, [value, isInitialized]);
 

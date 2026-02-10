@@ -42,8 +42,8 @@ const PackagesPage = () => {
     <div className="page packages-page">
       <header className="page-header">
         <div>
-          <p className="eyebrow">Packages</p>
-          <h1>Engineered for symmetric uploads, live streaming, and always-on work.</h1>
+          <p className="eyebrow">Gói cước</p>
+          <h1>Được thiết kế cho tải lên đồng bộ, luồng trực tiếp và làm việc luôn.</h1>
         </div>
         <div className="filter-group">
           {speedOptions.map((option) => (
@@ -58,7 +58,7 @@ const PackagesPage = () => {
         </div>
       </header>
 
-      {loading && <p>Loading packages...</p>}
+      {loading && <p>Đang tải gói cước...</p>}
       {!loading && (
         <div className="packages-layout">
           <div className="grid two">

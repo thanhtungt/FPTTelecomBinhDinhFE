@@ -39,12 +39,12 @@ const RegisterPage = () => {
   return (
     <div className="auth-page">
       <section>
-        <p className="eyebrow">Register</p>
-        <h1>Open an account to track every install milestone.</h1>
+        <p className="eyebrow">Đăng ký</p>
+        <h1>Đăng ký để theo dõi các đơn đăng ký lắp đặt của bạn.</h1>
         <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
           <label>
-            <span>Full name</span>
-            <input type="text" placeholder="Nguyen Van A" {...register('name')} />
+            <span>Tên đầy đủ</span>
+            <input type="text" placeholder="Nguyễn Văn A" {...register('name')} />
             {errors.name && <small>{errors.name.message}</small>}
           </label>
           <label>
@@ -53,22 +53,22 @@ const RegisterPage = () => {
             {errors.email && <small>{errors.email.message}</small>}
           </label>
           <label>
-            <span>Phone</span>
+            <span>Số điện thoại</span>
             <input type="tel" placeholder="0912 345 678" {...register('phone')} />
             {errors.phone && <small>{errors.phone.message}</small>}
           </label>
           <label>
-            <span>Password</span>
+            <span>Mật khẩu</span>
             <input type="password" placeholder="••••••••" {...register('password')} />
             {errors.password && <small>{errors.password.message}</small>}
           </label>
           {error && <p className="form-alert">{error}</p>}
           <button type="submit" className="primary-btn" disabled={isSubmitting}>
-            {isSubmitting ? 'Creating...' : 'Create account'}
+            {isSubmitting ? 'Đang tạo...' : 'Đăng ký'}
           </button>
         </form>
         <p className="auth-switch">
-          Already have account? <Link to="/login">Sign in →</Link>
+          Đã có tài khoản? <Link to="/login">Đăng nhập →</Link>
         </p>
       </section>
     </div>

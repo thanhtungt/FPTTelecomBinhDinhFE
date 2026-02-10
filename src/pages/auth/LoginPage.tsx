@@ -41,26 +41,26 @@ const LoginPage = () => {
   return (
     <div className="auth-page">
       <section>
-        <p className="eyebrow">Login</p>
-        <h1>Welcome back. Track your fiber installs.</h1>
+        <p className="eyebrow">Đăng nhập</p>
+        <h1>Đăng nhập để theo dõi các đơn đăng ký lắp đặt của bạn.</h1>
         <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
           <label>
-            <span>Phone</span>
+            <span>Số điện thoại</span>
             <input type="tel" placeholder="0912 345 678" {...register('phone')} />
             {errors.phone && <small>{errors.phone.message}</small>}
           </label>
           <label>
-            <span>Password</span>
+            <span>Mật khẩu</span>
             <input type="password" placeholder="••••••••" {...register('password')} />
             {errors.password && <small>{errors.password.message}</small>}
           </label>
           {error && <p className="form-alert">{error}</p>}
           <button type="submit" className="primary-btn" disabled={isSubmitting}>
-            {isSubmitting ? 'Signing in...' : 'Sign in'}
+            {isSubmitting ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>
         </form>
         <p className="auth-switch">
-          No account yet? <Link to="/register">Create an account →</Link>
+          Chưa có tài khoản? <Link to="/register">Đăng ký →</Link>
         </p>
       </section>
     </div>

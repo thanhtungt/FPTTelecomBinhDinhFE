@@ -29,8 +29,8 @@ const PostDetailPage = () => {
       console.error(err);
       setPost(null);
       setRelated([]);
-      setError('Unable to load this article.');
-      showToast('Unable to load article', 'error');
+      setError('Không thể tải bài viết.');
+      showToast('Không thể tải bài viết', 'error');
     } finally {
       setLoading(false);
     }
@@ -56,13 +56,13 @@ const PostDetailPage = () => {
         </>
       ) : error || !post ? (
         <div className="empty-state stack">
-          <p>{error ?? 'Article not found.'}</p>
+          <p>{error ?? 'Bài viết không tồn tại.'}</p>
           <div className="hero__actions">
             <button className="ghost-btn" onClick={loadPost}>
-              Retry
+              Thử lại
             </button>
             <button className="primary-btn" onClick={() => navigate('/posts')}>
-              Back to stories
+              Quay lại
             </button>
           </div>
         </div>
@@ -78,7 +78,7 @@ const PostDetailPage = () => {
 
           {related.length > 0 && (
             <section>
-              <h3>More stories</h3>
+              <h3>Thư viện</h3>
               <div className="grid three">
                 {related.map((item) => (
                   <PostCard key={item.id} item={item} />

@@ -15,7 +15,7 @@ const PostCard = ({ item }: PostCardProps) => (
       <p className="post-card__excerpt">{item.content.replace(/<[^>]*>/g, '').slice(0, 120)}...</p>
     </div>
     <Link to={`/posts/${item.slug}`} className="ghost-btn">
-      Read story →
+      Đọc tin tức →
     </Link>
   </article>
 );
