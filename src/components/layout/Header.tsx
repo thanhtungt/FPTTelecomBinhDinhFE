@@ -6,7 +6,8 @@ import fptTelecomLogo from '../../assets/fpt-telecom-logo.png';
 const navItems = [
   { label: 'Trang Chủ', path: '/' },
   { label: 'Dịch Vụ', path: '/packages' },
-  { label: 'Tin Tức & Khuyến Mãi', path: '/posts' }
+  { label: 'Tin Tức & Khuyến Mãi', path: '/posts' },
+  { label: 'Tuyển Dụng', path: '/careers' }
 ];
 
 const Header = () => {

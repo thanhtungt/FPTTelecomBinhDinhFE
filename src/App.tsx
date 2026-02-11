@@ -14,6 +14,11 @@ import AdminPackagesPage from './pages/dashboard/AdminPackagesPage';
 import AdminPackageEditorPage from './pages/dashboard/AdminPackageEditorPage';
 import AdminCategoriesPage from './pages/dashboard/AdminCategoriesPage';
 import AdminCategoryEditorPage from './pages/dashboard/AdminCategoryEditorPage';
+import AdminJobPostingsPage from './pages/dashboard/AdminJobPostingsPage';
+import AdminJobPostingEditorPage from './pages/dashboard/AdminJobPostingEditorPage';
+import AdminJobApplicationsPage from './pages/dashboard/AdminJobApplicationsPage';
+import CareersPage from './pages/CareersPage';
+import JobDetailPage from './pages/JobDetailPage';
 import MyRegistrationsPage from './pages/dashboard/MyRegistrationsPage';
 import NotFoundPage from './pages/NotFoundPage';
 import { ProtectedRoute } from './components/routing/ProtectedRoute';
@@ -26,6 +31,8 @@ const App = () => (
     <Route path="/packages" element={<AppShell><PackagesPage /></AppShell>} />
     <Route path="/posts" element={<AppShell><PostsPage /></AppShell>} />
     <Route path="/posts/:slug" element={<AppShell><PostDetailPage /></AppShell>} />
+    <Route path="/careers" element={<AppShell><CareersPage /></AppShell>} />
+    <Route path="/careers/:id" element={<AppShell><JobDetailPage /></AppShell>} />
     <Route path="/login" element={<AppShell><LoginPage /></AppShell>} />
     <Route path="/register" element={<AppShell><RegisterPage /></AppShell>} />
     
@@ -138,6 +145,46 @@ const App = () => (
         <DashboardShell>
           <ProtectedRoute roles={['Admin']}>
             <AdminCategoryEditorPage />
+          </ProtectedRoute>
+        </DashboardShell>
+      }
+    />
+    <Route
+      path="/dashboard/job-postings"
+      element={
+        <DashboardShell>
+          <ProtectedRoute roles={['Admin', 'Staff']}>
+            <AdminJobPostingsPage />
+          </ProtectedRoute>
+        </DashboardShell>
+      }
+    />
+    <Route
+      path="/dashboard/job-postings/new"
+      element={
+        <DashboardShell>
+          <ProtectedRoute roles={['Admin', 'Staff']}>
+            <AdminJobPostingEditorPage />
+          </ProtectedRoute>
+        </DashboardShell>
+      }
+    />
+    <Route
+      path="/dashboard/job-postings/:id/edit"
+      element={
+        <DashboardShell>
+          <ProtectedRoute roles={['Admin', 'Staff']}>
+            <AdminJobPostingEditorPage />
+          </ProtectedRoute>
+        </DashboardShell>
+      }
+    />
+    <Route
+      path="/dashboard/job-applications"
+      element={
+        <DashboardShell>
+          <ProtectedRoute roles={['Admin', 'Staff']}>
+            <AdminJobApplicationsPage />
           </ProtectedRoute>
         </DashboardShell>
       }

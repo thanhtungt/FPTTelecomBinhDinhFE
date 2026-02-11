@@ -14,13 +14,17 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         { label: 'Registrations', path: '/dashboard/registrations'},
         { label: 'Posts', path: '/dashboard/posts'},
         { label: 'Categories', path: '/dashboard/categories'},
-        { label: 'Packages', path: '/dashboard/packages'}
+        { label: 'Packages', path: '/dashboard/packages'},
+        { label: 'Job Postings', path: '/dashboard/job-postings'},
+        { label: 'Job Applications', path: '/dashboard/job-applications'}
       ];
     }
     
     if (user.role === 'Staff') {
       return [
-        { label: 'Đơn đăng ký', path: '/dashboard/registrations', icon: '📋' }
+        { label: 'Đơn đăng ký', path: '/dashboard/registrations', icon: '📋' },
+        { label: 'Tin tuyển dụng', path: '/dashboard/job-postings', icon: '💼' },
+        { label: 'Hồ sơ ứng tuyển', path: '/dashboard/job-applications', icon: '📄' }
       ];
     }
     
