@@ -112,7 +112,10 @@ const CareersPage = () => {
                 padding: '1.5rem',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                backgroundColor: '#fff'
+                backgroundColor: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '2rem'
               }}
               onClick={() => navigate(`/careers/${job.id}`)}
               onMouseEnter={(e) => {
@@ -124,31 +127,33 @@ const CareersPage = () => {
                 e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
-              <h2 style={{ marginBottom: '0.5rem', fontSize: '1.5rem' }}>{job.title}</h2>
-              <p style={{ color: '#666', marginBottom: '1rem' }}>{job.position}</p>
-              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
-                <span className="table-chip">{job.department}</span>
-                <span className="table-chip">{job.location}</span>
-                <span className="table-chip">{job.employmentType}</span>
-                <span className="table-chip">{job.experienceLevel}</span>
-              </div>
-              <div style={{ fontSize: '0.9rem', color: '#444' }}>
-                <p>
-                  <strong>Lương:</strong> {formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency)}
-                </p>
-                <p>
-                  <strong>Số lượng:</strong> {job.numberOfPositions} vị trí
-                </p>
-                {job.applicationDeadline && (
+              <div style={{ flex: 1 }}>
+                <h2 style={{ marginBottom: '0.5rem', fontSize: '1.5rem' }}>{job.title}</h2>
+                <p style={{ color: '#666', marginBottom: '1rem' }}>{job.position}</p>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+                  <span className="table-chip">{job.department}</span>
+                  <span className="table-chip">{job.location}</span>
+                  <span className="table-chip">{job.employmentType}</span>
+                  <span className="table-chip">{job.experienceLevel}</span>
+                </div>
+                <div style={{ fontSize: '0.9rem', color: '#444' }}>
                   <p>
-                    <strong>Hạn nộp:</strong> {formatDeadline(job.applicationDeadline)}
+                    <strong>Lương:</strong> {formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency)}
                   </p>
-                )}
+                  <p>
+                    <strong>Số lượng:</strong> {job.numberOfPositions} vị trí
+                  </p>
+                  {job.applicationDeadline && (
+                    <p>
+                      <strong>Hạn nộp:</strong> {formatDeadline(job.applicationDeadline)}
+                    </p>
+                  )}
+                </div>
               </div>
               <button
                 type="button"
                 className="primary-btn"
-                style={{ marginTop: '1rem', width: '100%' }}
+                style={{ minWidth: '180px', alignSelf: 'center' }}
                 onClick={(e) => {
                   e.stopPropagation();
                   navigate(`/careers/${job.id}`);
