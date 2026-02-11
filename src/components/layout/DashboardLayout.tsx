@@ -22,14 +22,14 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     
     if (user.role === 'Staff') {
       return [
-        { label: 'Đơn đăng ký', path: '/dashboard/registrations', icon: '📋' },
-        { label: 'Tin tuyển dụng', path: '/dashboard/job-postings', icon: '💼' },
-        { label: 'Hồ sơ ứng tuyển', path: '/dashboard/job-applications', icon: '📄' }
+        { label: 'Đơn đăng ký', path: '/dashboard/registrations'},
+        { label: 'Tin tuyển dụng', path: '/dashboard/job-postings'},
+        { label: 'Hồ sơ ứng tuyển', path: '/dashboard/job-applications'}
       ];
     }
     
     return [
-      { label: 'Đơn đăng ký', path: '/dashboard/my-registrations', icon: '🛒' }
+      { label: 'Đơn đăng ký', path: '/dashboard/my-registrations'}
     ];
   }, [user]);
 
