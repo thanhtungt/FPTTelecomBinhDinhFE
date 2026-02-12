@@ -39,6 +39,11 @@ const QuickRegistrationForm = ({ packages, selectedPackageId, onSuccess }: Quick
     resolver: zodResolver(formSchema)
   });
 
+  // Find the selected package
+  const selectedPackage = selectedPackageId 
+    ? packages.find(pkg => pkg.id === selectedPackageId)
+    : undefined;
+
   useEffect(() => {
     if (selectedPackageId) {
       setValue('packageId', String(selectedPackageId));
@@ -92,18 +97,38 @@ const QuickRegistrationForm = ({ packages, selectedPackageId, onSuccess }: Quick
           <input type="text" placeholder="123 Lê Lợi, Quy Nhơn" {...register('address')} />
           {errors.address && <small>{errors.address.message}</small>}
         </label>
-        <label>
-          <span>Gói</span>
-          <select {...register('packageId')}>
-            <option value="">Select</option>
-            {packages.map((pkg) => (
-              <option key={pkg.id} value={pkg.id}>
-                {pkg.name} ({pkg.speedDown}/{pkg.speedUp} Mbps)
-              </option>
-            ))}
-          </select>
-          {errors.packageId && <small>{errors.packageId.message}</small>}
-        </label>
+        
+        {/* Show selected package or dropdown */}
+        {selectedPackage ? (
+          <div className="full">
+            <label>
+              <span>Gói đã chọn</span>
+              <div className="selected-package-display">
+                <div className="selected-package-info">
+                  <strong>{selectedPackage.name}</strong>
+                  <span className="package-speed">
+                    {selectedPackage.speedDown}/{selectedPackage.speedUp} Mbps
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" {...register('packageId')} />
+            </label>
+          </div>
+        ) : (
+          <label>
+            <span>Gói</span>
+            <select {...register('packageId')}>
+              <option value="">Select</option>
+              {packages.map((pkg) => (
+                <option key={pkg.id} value={pkg.id}>
+                  {pkg.name} ({pkg.speedDown}/{pkg.speedUp} Mbps)
+                </option>
+              ))}
+            </select>
+            {errors.packageId && <small>{errors.packageId.message}</small>}
+          </label>
+        )}
+        
         <label className="full">
           <span>Ghi chú</span>
           <textarea rows={3} placeholder="Thời gian, tầng, node..." {...register('note')} />

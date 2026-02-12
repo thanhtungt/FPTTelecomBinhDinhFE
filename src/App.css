@@ -848,15 +848,6 @@
   box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
 }
 
-.package-card--featured .package-card__cta {
-  background: linear-gradient(135deg, #f37021 0%, #ff8a3d 100%);
-  box-shadow: 0 4px 12px rgba(243, 112, 33, 0.25);
-}
-
-.package-card--featured .package-card__cta:hover {
-  box-shadow: 0 8px 20px rgba(243, 112, 33, 0.35);
-}
-
 .post-card__category {
   text-transform: uppercase;
   font-size: 0.75rem;
@@ -920,6 +911,33 @@ small {
   border: 1px solid rgba(239, 68, 68, 0.4);
   padding: 0.5rem 0.75rem;
   border-radius: 12px;
+}
+
+/* Selected Package Display */
+.selected-package-display {
+  background: linear-gradient(135deg, #f37021 0%, #ff8a3d 100%);
+  border: 2px solid #f37021;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 6px 18px rgba(243, 112, 33, 0.15);
+}
+
+.selected-package-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.selected-package-info strong {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.selected-package-info .package-speed {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .auth-page {
@@ -1605,6 +1623,15 @@ th {
     width: 320px;
     max-width: 320px;
   }
+
+  .quick-registration-page .registration-form-wrapper {
+    max-width: 100%;
+  }
+
+  .quick-registration-page .packages-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 }
 
 @media (max-width: 600px) {
@@ -1612,4 +1639,52 @@ th {
     width: 100%;
     max-width: 100%;
   }
+}
+
+/* Quick Registration Page */
+.quick-registration-page {
+  background: #f8f9fa;
+}
+
+.quick-registration-page .registration-form-section {
+  background: #ffffff;
+  padding: 3rem 0;
+  margin-bottom: 3rem;
+}
+
+.quick-registration-page .registration-form-wrapper {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.quick-registration-page .packages-showcase {
+  padding: 3rem 0;
+  background: #ffffff;
+}
+
+.quick-registration-page .packages-showcase .section-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 0 1.5rem;
+}
+
+.quick-registration-page .packages-showcase .section-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+}
+
+.quick-registration-page .packages-showcase .section-header p {
+  font-size: 1rem;
+  color: #64748b;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.quick-registration-page .text-center {
+  text-align: center;
+  color: #64748b;
+  padding: 2rem 0;
 }

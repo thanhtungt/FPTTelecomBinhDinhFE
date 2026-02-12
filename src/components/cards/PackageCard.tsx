@@ -8,6 +8,12 @@ interface PackageCardProps {
 }
 
 const PackageCard = ({ item, onSelect, featured = false }: PackageCardProps) => {
+  const handleRegisterClick = () => {
+    // Open registration form in new tab with selected package
+    window.open(`/register-package?package=${item.id}`, '_blank');
+    onSelect?.(item);
+  };
+
   return (
     <article className={`package-card ${featured ? 'package-card--featured' : ''}`}>
       {/* Header with image */}
@@ -65,7 +71,7 @@ const PackageCard = ({ item, onSelect, featured = false }: PackageCardProps) => 
         {/* Actions */}
         <div className="package-card__actions">
           <button className="package-card__link">Xem chi tiết</button>
-          <button className="package-card__cta" onClick={() => onSelect?.(item)}>
+          <button className="package-card__cta" onClick={handleRegisterClick}>
             Đăng ký ngay
           </button>
         </div>

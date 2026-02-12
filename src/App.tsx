@@ -7,6 +7,7 @@ import PostsPage from './pages/PostsPage';
 import PostDetailPage from './pages/PostDetailPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
+import QuickRegistrationPage from './pages/QuickRegistrationPage';
 import AdminRegistrationsPage from './pages/dashboard/AdminRegistrationsPage';
 import AdminPostsPage from './pages/dashboard/AdminPostsPage';
 import AdminPostEditorPage from './pages/dashboard/AdminPostEditorPage';
@@ -29,6 +30,7 @@ const App = () => (
     {/* Public routes */}
     <Route path="/" element={<AppShell><HomePage /></AppShell>} />
     <Route path="/packages" element={<AppShell><PackagesPage /></AppShell>} />
+    <Route path="/register-package" element={<AppShell><QuickRegistrationPage /></AppShell>} />
     <Route path="/posts" element={<AppShell><PostsPage /></AppShell>} />
     <Route path="/posts/:slug" element={<AppShell><PostDetailPage /></AppShell>} />
     <Route path="/careers" element={<AppShell><CareersPage /></AppShell>} />
