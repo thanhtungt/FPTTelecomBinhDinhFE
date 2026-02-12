@@ -11,12 +11,12 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     
     if (user.role === 'Admin') {
       return [
-        { label: 'Registrations', path: '/dashboard/registrations'},
-        { label: 'Posts', path: '/dashboard/posts'},
-        { label: 'Categories', path: '/dashboard/categories'},
-        { label: 'Packages', path: '/dashboard/packages'},
-        { label: 'Job Postings', path: '/dashboard/job-postings'},
-        { label: 'Job Applications', path: '/dashboard/job-applications'}
+        { label: 'Đăng ký', path: '/dashboard/registrations'},
+        { label: 'Bài viết', path: '/dashboard/posts'},
+        { label: 'Danh mục', path: '/dashboard/categories'},
+        { label: 'Gói cước', path: '/dashboard/packages'},
+        { label: 'Tin tuyển dụng', path: '/dashboard/job-postings'},
+        { label: 'Hồ sơ ứng tuyển', path: '/dashboard/job-applications'}
       ];
     }
     

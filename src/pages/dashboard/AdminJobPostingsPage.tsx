@@ -5,6 +5,7 @@ import type { JobPosting, JobPostingStatus } from '../../types/jobPosting';
 import { PostTableSkeleton } from '../../components/feedback/Skeleton';
 import { formatDate } from '../../utils/format';
 import { useToast } from '../../hooks/useToast';
+import ConfirmModal from '../../components/common/ConfirmModal';
 
 const statusFilters: Array<{ label: string; value: 'all' | JobPostingStatus }> = [
   { label: 'Tất cả', value: 'all' },
@@ -21,6 +22,21 @@ const AdminJobPostingsPage = () => {
   const [statusFilter, setStatusFilter] = useState<'all' | JobPostingStatus>('all');
   const [search, setSearch] = useState('');
   const { showToast } = useToast();
+  
+  // Confirmation modal state
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    danger?: boolean;
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => {},
+    danger: false
+  });
 
   const fetchJobPostings = useCallback(
     async (status: 'all' | JobPostingStatus) => {
@@ -53,29 +69,53 @@ const AdminJobPostingsPage = () => {
     );
   }, [jobPostings, search]);
 
-  const handleDelete = async (posting: JobPosting) => {
-    if (!confirm(`Xóa tin tuyển dụng "${posting.title}"?`)) return;
-    try {
-      await JobPostingAPI.remove(posting.id);
-      setJobPostings((prev) => prev.filter((item) => item.id !== posting.id));
-      showToast('Tin tuyển dụng đã được xóa', 'success');
-    } catch (error) {
-      console.error(error);
-      showToast('Không thể xóa tin tuyển dụng', 'error');
-    }
+  const handleDelete = (posting: JobPosting) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Xóa tin tuyển dụng',
+      message: `Bạn có chắc chắn muốn xóa tin tuyển dụng "${posting.title}"?\n\nHành động này không thể hoàn tác.`,
+      danger: true,
+      onConfirm: async () => {
+        try {
+          await JobPostingAPI.remove(posting.id);
+          setJobPostings((prev) => prev.filter((item) => item.id !== posting.id));
+          showToast('Tin tuyển dụng đã được xóa', 'success');
+        } catch (error) {
+          console.error(error);
+          showToast('Không thể xóa tin tuyển dụng', 'error');
+        }
+        setConfirmModal({ ...confirmModal, isOpen: false });
+      }
+    });
   };
 
-  const handleStatusChange = async (posting: JobPosting, newStatus: JobPostingStatus) => {
-    try {
-      const updated = await JobPostingAPI.updateStatus(posting.id, newStatus);
-      setJobPostings((prev) =>
-        prev.map((item) => (item.id === posting.id ? updated : item))
-      );
-      showToast('Trạng thái đã được cập nhật', 'success');
-    } catch (error) {
-      console.error(error);
-      showToast('Không thể cập nhật trạng thái', 'error');
-    }
+  const handleStatusChange = (posting: JobPosting, newStatus: JobPostingStatus) => {
+    const statusLabels: Record<JobPostingStatus, string> = {
+      draft: 'Nháp',
+      active: 'Đang mở',
+      closed: 'Đã đóng',
+      expired: 'Hết hạn'
+    };
+    
+    setConfirmModal({
+      isOpen: true,
+      title: 'Cập nhật trạng thái',
+      message: `Bạn có chắc chắn muốn chuyển trạng thái thành "${statusLabels[newStatus]}"?`,
+      danger: false,
+      onConfirm: async () => {
+        try {
+          const updated = await JobPostingAPI.updateStatus(posting.id, newStatus);
+          setJobPostings((prev) =>
+            prev.map((item) => (item.id === posting.id ? updated : item))
+          );
+          showToast('Trạng thái đã được cập nhật', 'success');
+        } catch (error) {
+          console.error(error);
+          showToast('Không thể cập nhật trạng thái', 'error');
+        }
+        setConfirmModal({ ...confirmModal, isOpen: false });
+      }
+    });
   };
 
   const handleRefresh = () => {
@@ -90,8 +130,6 @@ const AdminJobPostingsPage = () => {
     navigate(`/dashboard/job-postings/${posting.id}/edit`);
   };
 
-
-
   return (
     <div className="container">
       <header className="section-header">
@@ -100,7 +138,7 @@ const AdminJobPostingsPage = () => {
           <h1>Tin tuyển dụng</h1>
         </div>
         <button type="button" className="primary-btn" onClick={handleCreateNew}>
-          + Tạo tin tuyển dụng mới
+          + Tạo tin tuyển dụng
         </button>
       </header>
 
@@ -138,12 +176,12 @@ const AdminJobPostingsPage = () => {
             <table>
               <thead>
                 <tr>
-                  <th>Tiêu đề & Vị trí</th>
+                  <th>Tiêu đề</th>
+                  <th>Vị trí</th>
                   <th>Phòng ban</th>
-                  <th>Địa điểm</th>
+                  <th>Số lượng</th>
                   <th>Trạng thái</th>
-                  <th>Số hồ sơ</th>
-                  <th>Ngày tạo</th>
+                  <th>Hạn nộp</th>
                   <th>Thao tác</th>
                 </tr>
               </thead>
@@ -152,21 +190,15 @@ const AdminJobPostingsPage = () => {
                   <tr key={item.id}>
                     <td>
                       <strong>{item.title}</strong>
-                      <p className="table-subtitle">{item.position}</p>
                     </td>
-                    <td>
-                      <span className="table-chip">{item.department}</span>
-                    </td>
-                    <td>
-                      <small>{item.location}</small>
-                    </td>
+                    <td>{item.position}</td>
+                    <td>{item.department}</td>
+                    <td>{item.numberOfPositions}</td>
                     <td>
                       <select
-                        value={item.status}
-                        onChange={(e) =>
-                          handleStatusChange(item, e.target.value as JobPostingStatus)
-                        }
                         className="table-select"
+                        value={item.status}
+                        onChange={(e) => handleStatusChange(item, e.target.value as JobPostingStatus)}
                       >
                         <option value="draft">Nháp</option>
                         <option value="active">Đang mở</option>
@@ -175,10 +207,7 @@ const AdminJobPostingsPage = () => {
                       </select>
                     </td>
                     <td>
-                      <strong>{item.applicationCount}</strong>
-                    </td>
-                    <td>
-                      <small>{formatDate(item.createdAt)}</small>
+                      <small>{item.applicationDeadline ? formatDate(item.applicationDeadline) : '—'}</small>
                     </td>
                     <td>
                       <div className="table-actions">
@@ -187,13 +216,6 @@ const AdminJobPostingsPage = () => {
                         </button>
                         <button type="button" className="danger-btn" onClick={() => handleDelete(item)}>
                           Xóa
-                        </button>
-                        <button
-                          type="button"
-                          className="ghost-btn"
-                          onClick={() => window.open(`/careers/${item.id}`, '_blank')}
-                        >
-                          Xem
                         </button>
                       </div>
                     </td>
@@ -204,6 +226,16 @@ const AdminJobPostingsPage = () => {
           </div>
         )}
       </section>
+
+      {/* Confirmation Modal */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal({ ...confirmModal, isOpen: false })}
+        danger={confirmModal.danger}
+      />
     </div>
   );
 };

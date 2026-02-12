@@ -6,6 +6,7 @@ import type { JobPosting } from '../../types/jobPosting';
 import { PostTableSkeleton } from '../../components/feedback/Skeleton';
 import { formatDate } from '../../utils/format';
 import { useToast } from '../../hooks/useToast';
+import ConfirmModal from '../../components/common/ConfirmModal';
 
 const statusFilters: Array<{ label: string; value: 'all' | JobApplicationStatus }> = [
   { label: 'Tất cả', value: 'all' },
@@ -28,6 +29,21 @@ const AdminJobApplicationsPage = () => {
     note: string;
   } | null>(null);
   const { showToast } = useToast();
+  
+  // Confirm modal state
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    danger?: boolean;
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => {},
+    danger: false
+  });
 
   const fetchApplications = useCallback(
     async (status: 'all' | JobApplicationStatus) => {
@@ -81,35 +97,59 @@ const AdminJobApplicationsPage = () => {
     return result;
   }, [applications, jobPostingFilter, search]);
 
-  const handleUpdateStatus = async () => {
+  const handleUpdateStatus = () => {
     if (!reviewModal) return;
-
-    try {
-      const updated = await JobApplicationAPI.updateStatus(reviewModal.application.id, {
-        status: reviewModal.status,
-        reviewNote: reviewModal.note || null
-      });
-      setApplications((prev) =>
-        prev.map((item) => (item.id === updated.id ? updated : item))
-      );
-      showToast('Trạng thái đã được cập nhật', 'success');
-      setReviewModal(null);
-    } catch (error) {
-      console.error(error);
-      showToast('Không thể cập nhật trạng thái', 'error');
-    }
+    
+    const statusLabels: Record<JobApplicationStatus, string> = {
+      pending: 'Chờ xử lý',
+      reviewing: 'Đang xem xét',
+      approved: 'Chấp nhận',
+      rejected: 'Từ chối'
+    };
+    
+    setConfirmModal({
+      isOpen: true,
+      title: 'Cập nhật trạng thái hồ sơ',
+      message: `Bạn có chắc chắn muốn cập nhật trạng thái thành "${statusLabels[reviewModal.status]}" cho ứng viên "${reviewModal.application.fullName}"?`,
+      danger: false,
+      onConfirm: async () => {
+        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+        try {
+          const updated = await JobApplicationAPI.updateStatus(reviewModal.application.id, {
+            status: reviewModal.status,
+            reviewNote: reviewModal.note || null
+          });
+          setApplications((prev) =>
+            prev.map((item) => (item.id === updated.id ? updated : item))
+          );
+          showToast('Trạng thái đã được cập nhật', 'success');
+          setReviewModal(null);
+        } catch (error) {
+          console.error(error);
+          showToast('Không thể cập nhật trạng thái', 'error');
+        }
+      }
+    });
   };
 
-  const handleDelete = async (application: JobApplication) => {
-    if (!confirm(`Xóa hồ sơ của "${application.fullName}"?`)) return;
-    try {
-      await JobApplicationAPI.remove(application.id);
-      setApplications((prev) => prev.filter((item) => item.id !== application.id));
-      showToast('Hồ sơ đã được xóa', 'success');
-    } catch (error) {
-      console.error(error);
-      showToast('Không thể xóa hồ sơ', 'error');
-    }
+  const handleDelete = (application: JobApplication) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Xóa hồ sơ ứng tuyển',
+      message: `Bạn có chắc chắn muốn xóa hồ sơ của "${application.fullName}"?\n\nHành động này không thể hoàn tác.`,
+      danger: true,
+      onConfirm: async () => {
+        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+        try {
+          await JobApplicationAPI.remove(application.id);
+          setApplications((prev) => prev.filter((item) => item.id !== application.id));
+          showToast('Hồ sơ đã được xóa', 'success');
+        } catch (error) {
+          console.error(error);
+          showToast('Không thể xóa hồ sơ', 'error');
+        }
+      }
+    });
   };
 
   const handleRefresh = () => {
@@ -210,7 +250,7 @@ const AdminJobApplicationsPage = () => {
                     </td>
                     <td>
                       <small>{item.email}</small>
-                      <br />
+                      < br />
                       <small>{item.phone}</small>
                     </td>
                     <td>
@@ -322,6 +362,16 @@ const AdminJobApplicationsPage = () => {
           </div>
         </div>
       )}
+
+      {/* Confirmation Modal */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal({ ...confirmModal, isOpen: false })}
+        danger={confirmModal.danger}
+      />
     </div>
   );
 };

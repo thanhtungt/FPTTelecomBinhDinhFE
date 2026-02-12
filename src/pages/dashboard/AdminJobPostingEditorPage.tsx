@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { JobPostingAPI } from '../../api/jobPostings';
 import type { CreateJobPostingPayload, UpdateJobPostingPayload } from '../../types/jobPosting';
 import { useToast } from '../../hooks/useToast';
+import ConfirmModal from '../../components/common/ConfirmModal';
 
 const AdminJobPostingEditorPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -12,6 +13,17 @@ const AdminJobPostingEditorPage = () => {
 
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => {}
+  });
   const [formData, setFormData] = useState<UpdateJobPostingPayload>({
     title: '',
     description: '',
@@ -102,38 +114,48 @@ const AdminJobPostingEditorPage = () => {
       showToast('Mức lương tối thiểu không được lớn hơn mức lương tối đa', 'error');
       return;
     }
-
-    setSubmitting(true);
-    try {
-      if (isEditMode && id) {
-        await JobPostingAPI.update(Number(id), formData);
-        showToast('Tin tuyển dụng đã được cập nhật', 'success');
-      } else {
-        const payload: CreateJobPostingPayload = {
-          title: formData.title,
-          description: formData.description,
-          position: formData.position,
-          department: formData.department,
-          location: formData.location,
-          employmentType: formData.employmentType,
-          experienceLevel: formData.experienceLevel,
-          salaryMin: formData.salaryMin,
-          salaryMax: formData.salaryMax,
-          requirements: formData.requirements || null,
-          benefits: formData.benefits || null,
-          numberOfPositions: formData.numberOfPositions,
-          applicationDeadline: formData.applicationDeadline
-        };
-        await JobPostingAPI.create(payload);
-        showToast('Tin tuyển dụng đã được tạo', 'success');
+    
+    // Confirmation dialog
+    const action = isEditMode ? 'cập nhật' : 'tạo';
+    setConfirmModal({
+      isOpen: true,
+      title: isEditMode ? 'Cập nhật tin tuyển dụng' : 'Tạo tin tuyển dụng mới',
+      message: `Bạn có chắc chắn muốn ${action} tin tuyển dụng "${formData.title}"?`,
+      onConfirm: async () => {
+        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+        setSubmitting(true);
+        try {
+          if (isEditMode && id) {
+            await JobPostingAPI.update(Number(id), formData);
+            showToast('Tin tuyển dụng đã được cập nhật', 'success');
+          } else {
+            const payload: CreateJobPostingPayload = {
+              title: formData.title,
+              description: formData.description,
+              position: formData.position,
+              department: formData.department,
+              location: formData.location,
+              employmentType: formData.employmentType,
+              experienceLevel: formData.experienceLevel,
+              salaryMin: formData.salaryMin,
+              salaryMax: formData.salaryMax,
+              requirements: formData.requirements || null,
+              benefits: formData.benefits || null,
+              numberOfPositions: formData.numberOfPositions,
+              applicationDeadline: formData.applicationDeadline
+            };
+            await JobPostingAPI.create(payload);
+            showToast('Tin tuyển dụng đã được tạo', 'success');
+          }
+          navigate('/dashboard/job-postings');
+        } catch (error) {
+          console.error(error);
+          showToast('Không thể lưu tin tuyển dụng', 'error');
+        } finally {
+          setSubmitting(false);
+        }
       }
-      navigate('/dashboard/job-postings');
-    } catch (error) {
-      console.error(error);
-      showToast('Không thể lưu tin tuyển dụng', 'error');
-    } finally {
-      setSubmitting(false);
-    }
+    });
   };
 
   const handleCancel = () => {
@@ -390,6 +412,15 @@ const AdminJobPostingEditorPage = () => {
           </button>
         </div>
       </form>
+
+      {/* Confirmation Modal */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal({ ...confirmModal, isOpen: false })}
+      />
     </div>
   );
 };
