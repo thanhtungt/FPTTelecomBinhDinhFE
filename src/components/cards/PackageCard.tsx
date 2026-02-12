@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import type { Package } from '../../types/package';
 import { formatCurrency } from '../../utils/format';
 
@@ -8,10 +9,16 @@ interface PackageCardProps {
 }
 
 const PackageCard = ({ item, onSelect, featured = false }: PackageCardProps) => {
+  const navigate = useNavigate();
+
   const handleRegisterClick = () => {
     // Open registration form in new tab with selected package
     window.open(`/register-package?package=${item.id}`, '_blank');
     onSelect?.(item);
+  };
+
+  const handleViewDetail = () => {
+    navigate(`/packages/${item.id}`);
   };
 
   return (
@@ -70,7 +77,7 @@ const PackageCard = ({ item, onSelect, featured = false }: PackageCardProps) => 
 
         {/* Actions */}
         <div className="package-card__actions">
-          <button className="package-card__link">Xem chi tiết</button>
+          <button className="package-card__link" onClick={handleViewDetail}>Xem chi tiết</button>
           <button className="package-card__cta" onClick={handleRegisterClick}>
             Đăng ký ngay
           </button>

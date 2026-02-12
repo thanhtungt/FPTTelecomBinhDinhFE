@@ -10,8 +10,6 @@ import PackageCard from '../components/cards/PackageCard';
 import PostCard from '../components/cards/PostCard';
 import QuickRegistrationForm from '../components/forms/QuickRegistrationForm';
 import { formatCurrency } from '../utils/format';
-import bannerPlay from '../assets/bannerfpttele11.png';
-import bannerWifi from '../assets/bannerfpttele2.png';
 // cspell:ignore Nhon Binh Dinh
 
 const HomePage = () => {
@@ -19,8 +17,6 @@ const HomePage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeBanner, setActiveBanner] = useState(0);
-  const [isBannerPaused, setIsBannerPaused] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const navigate = useNavigate();
 
@@ -62,87 +58,10 @@ const HomePage = () => {
     };
   }, [selectedCategory]);
 
-  const banners = useMemo(
-    () => [
-      {
-        id: 'play',
-        image: bannerPlay,
-        alt: 'FPT Play Ngoại Hạng Anh chỉ từ 59K mỗi tháng',
-      },
-      {
-        id: 'wifi7',
-        image: bannerWifi,
-        alt: 'WiFi 7 dẫn đầu tốc độ',
-      },
-    ],
-    []
-  );
-
-  useEffect(() => {
-    if (isBannerPaused || banners.length <= 1) return;
-    const timer = window.setInterval(() => {
-      setActiveBanner((current) => (current + 1) % banners.length);
-    }, 5000);
-    return () => window.clearInterval(timer);
-  }, [banners.length, isBannerPaused]);
-
   const heroPackage = useMemo(() => packages[0], [packages]);
 
   return (
     <div className="page home-page">
-      <section
-        className="banner-carousel"
-        onMouseEnter={() => setIsBannerPaused(true)}
-        onMouseLeave={() => setIsBannerPaused(false)}
-        aria-label="Promotional banners"
-      >
-        <div className="banner-carousel__viewport">
-          {banners.map((banner, index) => (
-            <button
-              key={banner.id}
-              className={`banner-carousel__slide ${index === activeBanner ? 'is-active' : ''}`}
-              type="button"
-              onClick={() => navigate('/packages')}
-              aria-label={banner.alt}
-            >
-              <img src={banner.image} alt={banner.alt} />
-            </button>
-          ))}
-        </div>
-        <div className="banner-carousel__controls">
-          <button
-            className="banner-carousel__nav"
-            type="button"
-            onClick={() =>
-              setActiveBanner((current) => (current - 1 + banners.length) % banners.length)
-            }
-            aria-label="Previous banner"
-          >
-            ‹
-          </button>
-          <div className="banner-carousel__dots" role="tablist">
-            {banners.map((banner, index) => (
-              <button
-                key={`${banner.id}-dot`}
-                className={`banner-carousel__dot ${index === activeBanner ? 'is-active' : ''}`}
-                type="button"
-                onClick={() => setActiveBanner(index)}
-                aria-label={`Go to banner ${index + 1}`}
-                aria-pressed={index === activeBanner}
-              />
-            ))}
-          </div>
-          <button
-            className="banner-carousel__nav"
-            type="button"
-            onClick={() => setActiveBanner((current) => (current + 1) % banners.length)}
-            aria-label="Next banner"
-          >
-            ›
-          </button>
-        </div>
-      </section>
-
       <section className="hero">
         <div className="hero__text">
           <p className="eyebrow">FPT Quy Nhon fiber network</p>
@@ -163,7 +82,7 @@ const HomePage = () => {
             <div className="hero__highlight">
               <span>{heroPackage.name}</span>
               <strong>{formatCurrency(heroPackage.priceMonthly)}</strong>
-              <span>/month</span>
+              <span>/tháng</span>
             </div>
           )}
         </div>
@@ -232,26 +151,61 @@ const HomePage = () => {
         )}
       </section>
 
-      <section className="cta-section">
-        <div>
-          <p className="eyebrow">DNA lắp đặt</p>
-          <h2>Chúng tôi lập kế hoạch, khảo sát, lắp đặt và kích hoạt trong vòng 72 giờ.</h2>
-          <p>
-            Nhân viên chuyên nghiệp theo dõi bảng trạng thái với các cập nhật chủ động để bạn luôn biết được điều gì tiếp theo.
-          </p>
-        </div>
-        <div className="stats">
-          <div>
-            <strong>48h</strong>
-            <span>Khảo sát trung bình</span>
+      <section className="installation-dna-section">
+        <div className="installation-dna-container">
+          <div className="installation-dna-header">
+            <p className="eyebrow">DNA lắp đặt</p>
+            <h2>Chúng tôi lập kế hoạch, khảo sát, lắp đặt và kích hoạt trong vòng 72 giờ.</h2>
+            <p className="installation-description">
+              Nhân viên chuyên nghiệp theo dõi bảng trạng thái với các cập nhật chủ động để bạn luôn biết được điều gì tiếp theo.
+            </p>
           </div>
-          <div>
-            <strong>320+</strong>
-            <span>Khách hàng nâng cấp trong năm 2025</span>
+          
+          <div className="installation-stats-grid">
+            <div className="stat-card">
+              <div className="stat-content">
+                <strong className="stat-number">48h</strong>
+                <span className="stat-label">Khảo sát trung bình</span>
+              </div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-content">
+                <strong className="stat-number">320+</strong>
+                <span className="stat-label">Khách hàng nâng cấp trong năm 2025</span>
+              </div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-content">
+                <strong className="stat-number">12</strong>
+                <span className="stat-label">Đội ngũ chuyên nghiệp</span>
+              </div>
+            </div>
           </div>
-          <div>
-            <strong>12</strong>
-            <span>Đội ngũ chuyên nghiệp</span>
+
+          <div className="installation-process">
+            <div className="process-step">
+              <div className="process-number">1</div>
+              <div className="process-info">
+                <h3>Đăng ký & Tư vấn</h3>
+                <p>Nhận tư vấn miễn phí và lựa chọn gói phù hợp</p>
+              </div>
+            </div>
+            <div className="process-arrow">→</div>
+            <div className="process-step">
+              <div className="process-number">2</div>
+              <div className="process-info">
+                <h3>Khảo sát địa điểm</h3>
+                <p>Kỹ thuật viên khảo sát và lên phương án lắp đặt</p>
+              </div>
+            </div>
+            <div className="process-arrow">→</div>
+            <div className="process-step">
+              <div className="process-number">3</div>
+              <div className="process-info">
+                <h3>Lắp đặt & Kích hoạt</h3>
+                <p>Hoàn tất lắp đặt và kích hoạt dịch vụ trong 72h</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

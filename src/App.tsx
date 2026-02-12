@@ -3,6 +3,7 @@ import AppShell from './components/layout/AppShell';
 import DashboardShell from './components/layout/DashboardShell';
 import HomePage from './pages/HomePage';
 import PackagesPage from './pages/PackagesPage';
+import PackageDetailPage from './pages/PackageDetailPage';
 import PostsPage from './pages/PostsPage';
 import PostDetailPage from './pages/PostDetailPage';
 import LoginPage from './pages/auth/LoginPage';
@@ -30,6 +31,7 @@ const App = () => (
     {/* Public routes */}
     <Route path="/" element={<AppShell><HomePage /></AppShell>} />
     <Route path="/packages" element={<AppShell><PackagesPage /></AppShell>} />
+    <Route path="/packages/:id" element={<AppShell><PackageDetailPage /></AppShell>} />
     <Route path="/register-package" element={<AppShell><QuickRegistrationPage /></AppShell>} />
     <Route path="/posts" element={<AppShell><PostsPage /></AppShell>} />
     <Route path="/posts/:slug" element={<AppShell><PostDetailPage /></AppShell>} />
