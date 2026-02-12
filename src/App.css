@@ -1376,6 +1376,322 @@ th {
   min-width: 100px;
 }
 
+/* Review Modal - Enhanced UI */
+.review-modal-content {
+  background: var(--card);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease;
+}
+
+.review-modal-header {
+  padding: 2rem 2rem 1.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.review-modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.review-modal-subtitle {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.review-modal-close {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  transition: all 0.2s ease;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.review-modal-close:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.review-modal-body {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.review-section {
+  margin-bottom: 2rem;
+}
+
+.review-section:last-child {
+  margin-bottom: 0;
+}
+
+.review-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.review-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.review-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.review-info-label {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.review-info-value {
+  font-size: 1rem;
+  color: #0f172a;
+  font-weight: 500;
+}
+
+.review-job-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.review-job-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.review-job-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 0.25rem;
+}
+
+.review-job-position {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.review-cover-letter {
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  white-space: pre-wrap;
+  line-height: 1.7;
+  color: #475569;
+  font-size: 0.95rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.review-resume-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  color: #0f172a;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.review-resume-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-color: #cbd5e1;
+}
+
+.review-resume-icon {
+  font-size: 1.5rem;
+}
+
+.review-resume-arrow {
+  font-size: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.review-resume-btn:hover .review-resume-arrow {
+  transform: translateX(4px);
+}
+
+.review-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.review-field:last-child {
+  margin-bottom: 0;
+}
+
+.review-field-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.review-field-label .required {
+  color: #ef4444;
+  margin-left: 0.25rem;
+}
+
+.review-select {
+  padding: 0.85rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.review-select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.review-textarea {
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 120px;
+  transition: all 0.2s ease;
+}
+
+.review-textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.review-textarea::placeholder {
+  color: #94a3b8;
+}
+
+.review-modal-footer {
+  padding: 1.5rem 2rem;
+  border-top: 2px solid #e2e8f0;
+  background: #f8fafc;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.review-modal-footer button {
+  min-width: 120px;
+}
+
+/* Table Status Chips */
+.table-chip.status-pending {
+  border-color: #fbbf24;
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.table-chip.status-reviewing {
+  border-color: #60a5fa;
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.table-chip.status-approved {
+  border-color: #34d399;
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.table-chip.status-rejected {
+  border-color: #f87171;
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .review-modal-content {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .review-modal-header {
+    padding: 1.5rem;
+  }
+
+  .review-modal-body {
+    padding: 1.5rem;
+  }
+
+  .review-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .review-modal-footer {
+    padding: 1rem 1.5rem;
+    flex-direction: column-reverse;
+  }
+
+  .review-modal-footer button {
+    width: 100%;
+  }
+}
+
 .post-editor .file-input-compact input[type="file"] {
   padding: 0.5rem 0.75rem;
   border-radius: 10px;

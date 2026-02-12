@@ -301,62 +301,127 @@ const AdminJobApplicationsPage = () => {
       {/* Review Modal */}
       {reviewModal && (
         <div className="modal-overlay" onClick={() => setReviewModal(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2>Xem xét hồ sơ</h2>
-            <div className="modal-body">
-              <p>
-                <strong>Ứng viên:</strong> {reviewModal.application.fullName}
-              </p>
-              <p>
-                <strong>Email:</strong> {reviewModal.application.email}
-              </p>
-              <p>
-                <strong>Tin tuyển dụng:</strong> {reviewModal.application.jobPostingTitle}
-              </p>
+          <div className="review-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="review-modal-header">
+              <div>
+                <h2>Xem xét hồ sơ ứng tuyển</h2>
+                <p className="review-modal-subtitle">Đánh giá và cập nhật trạng thái ứng viên</p>
+              </div>
+              <button 
+                type="button" 
+                className="review-modal-close"
+                onClick={() => setReviewModal(null)}
+                aria-label="Đóng"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="review-modal-body">
+              {/* Candidate Info Section */}
+              <div className="review-section">
+                <h3 className="review-section-title">Thông tin ứng viên</h3>
+                <div className="review-info-grid">
+                  <div className="review-info-item">
+                    <span className="review-info-label"> Họ tên</span>
+                    <span className="review-info-value">{reviewModal.application.fullName}</span>
+                  </div>
+                  <div className="review-info-item">
+                    <span className="review-info-label">Email</span>
+                    <span className="review-info-value">{reviewModal.application.email}</span>
+                  </div>
+                  <div className="review-info-item">
+                    <span className="review-info-label">Số điện thoại</span>
+                    <span className="review-info-value">{reviewModal.application.phone}</span>
+                  </div>
+                  {reviewModal.application.address && (
+                    <div className="review-info-item">
+                      <span className="review-info-label">Địa chỉ</span>
+                      <span className="review-info-value">{reviewModal.application.address}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Job Posting Info */}
+              <div className="review-section">
+                <h3 className="review-section-title">Vị trí ứng tuyển</h3>
+                <div className="review-job-card">
+                  <div>
+                    <div className="review-job-title">{reviewModal.application.jobPostingTitle}</div>
+                    <div className="review-job-position">{reviewModal.application.jobPostingPosition}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Cover Letter */}
               {reviewModal.application.coverLetter && (
-                <div>
-                  <strong>Thư xin việc:</strong>
-                  <p style={{ whiteSpace: 'pre-wrap', marginTop: '0.5rem' }}>
+                <div className="review-section">
+                  <h3 className="review-section-title">Thư xin việc</h3>
+                  <div className="review-cover-letter">
                     {reviewModal.application.coverLetter}
-                  </p>
+                  </div>
                 </div>
               )}
-              <label style={{ display: 'block', marginTop: '1rem' }}>
-                <strong>Trạng thái:</strong>
-                <select
-                  value={reviewModal.status}
-                  onChange={(e) =>
-                    setReviewModal((prev) =>
-                      prev ? { ...prev, status: e.target.value as JobApplicationStatus } : null
-                    )
-                  }
-                  style={{ width: '100%', marginTop: '0.5rem' }}
-                >
-                  <option value="pending">Chờ xử lý</option>
-                  <option value="reviewing">Đang xem xét</option>
-                  <option value="approved">Chấp nhận</option>
-                  <option value="rejected">Từ chối</option>
-                </select>
-              </label>
-              <label style={{ display: 'block', marginTop: '1rem' }}>
-                <strong>Ghi chú:</strong>
-                <textarea
-                  value={reviewModal.note}
-                  onChange={(e) =>
-                    setReviewModal((prev) => (prev ? { ...prev, note: e.target.value } : null))
-                  }
-                  rows={4}
-                  style={{ width: '100%', marginTop: '0.5rem' }}
-                  placeholder="Nhập ghi chú về ứng viên..."
-                />
-              </label>
+
+              {/* Resume Link */}
+              {reviewModal.application.resumeUrl && (
+                <div className="review-section">
+                  <h3 className="review-section-title">Hồ sơ đính kèm</h3>
+                  <button
+                    type="button"
+                    className="review-resume-btn"
+                    onClick={() => window.open(reviewModal.application.resumeUrl!, '_blank')}
+                  >
+                    <span>Xem CV/Resume</span>
+                    <span className="review-resume-arrow">→</span>
+                  </button>
+                </div>
+              )}
+
+              {/* Status & Note Section */}
+              <div className="review-section">
+                <h3 className="review-section-title">Đánh giá & Trạng thái</h3>
+                
+                <label className="review-field">
+                  <span className="review-field-label">Trạng thái <span className="required">*</span></span>
+                  <select
+                    value={reviewModal.status}
+                    onChange={(e) =>
+                      setReviewModal((prev) =>
+                        prev ? { ...prev, status: e.target.value as JobApplicationStatus } : null
+                      )
+                    }
+                    className="review-select"
+                  >
+                    <option value="pending">Chờ xử lý</option>
+                    <option value="reviewing">Đang xem xét</option>
+                    <option value="approved">Chấp nhận</option>
+                    <option value="rejected">Từ chối</option>
+                  </select>
+                </label>
+
+                <label className="review-field">
+                  <span className="review-field-label">Ghi chú đánh giá</span>
+                  <textarea
+                    value={reviewModal.note}
+                    onChange={(e) =>
+                      setReviewModal((prev) => (prev ? { ...prev, note: e.target.value } : null))
+                    }
+                    rows={4}
+                    className="review-textarea"
+                    placeholder="Nhập ghi chú về ứng viên, lý do chấp nhận/từ chối, hoặc kế hoạch tiếp theo..."
+                  />
+                </label>
+              </div>
             </div>
-            <div className="modal-actions">
+
+            <div className="review-modal-footer">
               <button type="button" className="ghost-btn" onClick={() => setReviewModal(null)}>
-                Hủy
+                Hủy bỏ
               </button>
               <button type="button" className="primary-btn" onClick={handleUpdateStatus}>
-                Cập nhật
+                Lưu cập nhật
               </button>
             </div>
           </div>
