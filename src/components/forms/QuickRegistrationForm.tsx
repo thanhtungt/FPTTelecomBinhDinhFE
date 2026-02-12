@@ -6,6 +6,7 @@ import type { Package } from '../../types/package';
 import type { Registration } from '../../types/registration';
 import { RegistrationAPI } from '../../api/registrations';
 import { useAuth } from '../../hooks/useAuth';
+import { useToast } from '../../hooks/useToast';
 // cspell:ignore Nhon Mbps
 
 const formSchema = z.object({
@@ -26,7 +27,7 @@ interface QuickRegistrationFormProps {
 
 const QuickRegistrationForm = ({ packages, selectedPackageId, onSuccess }: QuickRegistrationFormProps) => {
   const { user } = useAuth();
-  const [serverMessage, setServerMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
   const [submitting, setSubmitting] = useState(false);
 
   const {
@@ -52,7 +53,6 @@ const QuickRegistrationForm = ({ packages, selectedPackageId, onSuccess }: Quick
 
   const onSubmit = async (values: FormValues) => {
     setSubmitting(true);
-    setServerMessage(null);
     try {
       const payload = {
         userId: user?.id,
@@ -64,11 +64,11 @@ const QuickRegistrationForm = ({ packages, selectedPackageId, onSuccess }: Quick
       };
 
       const result = await RegistrationAPI.create(payload);
-      setServerMessage('Registration created successfully. Our staff will call you soon.');
+      showToast('Đăng ký thành công! Nhân viên sẽ liên hệ với bạn trong thời gian sớm nhất.', 'success');
       reset();
       onSuccess?.(result);
     } catch (error) {
-      setServerMessage('Unable to submit right now. Please try again later.');
+      showToast('Không thể gửi đăng ký. Vui lòng thử lại sau.', 'error');
       console.error(error);
     } finally {
       setSubmitting(false);
@@ -134,7 +134,6 @@ const QuickRegistrationForm = ({ packages, selectedPackageId, onSuccess }: Quick
           <textarea rows={3} placeholder="Thời gian, tầng, node..." {...register('note')} />
         </label>
       </div>
-      {serverMessage && <p className="form-alert">{serverMessage}</p>}
       <button type="submit" className="primary-btn" disabled={submitting}>
         {submitting ? 'Đang gửi...' : 'Đăng ký' }
       </button>
