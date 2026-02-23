@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const menuItems = useMemo(() => {
     if (!user) return [];
@@ -35,11 +34,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       { label: 'Đơn đăng ký', path: '/dashboard/my-registrations'}
     ];
   }, [user]);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
 
   return (
     <div className="dashboard-layout">
