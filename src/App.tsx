@@ -20,6 +20,8 @@ import AdminJobPostingsPage from './pages/dashboard/AdminJobPostingsPage';
 import AdminJobPostingEditorPage from './pages/dashboard/AdminJobPostingEditorPage';
 import AdminJobApplicationsPage from './pages/dashboard/AdminJobApplicationsPage';
 import AdminChatPage from './pages/dashboard/AdminChatPage';
+import AdminUsersPage from './pages/dashboard/AdminUsersPage';
+import AdminUserEditorPage from './pages/dashboard/AdminUserEditorPage';
 import CareersPage from './pages/CareersPage';
 import JobDetailPage from './pages/JobDetailPage';
 import MyRegistrationsPage from './pages/dashboard/MyRegistrationsPage';
@@ -200,6 +202,36 @@ const App = () => (
         <DashboardShell>
           <ProtectedRoute roles={['Admin', 'Staff']}>
             <AdminChatPage />
+          </ProtectedRoute>
+        </DashboardShell>
+      }
+    />
+    <Route
+      path="/dashboard/users"
+      element={
+        <DashboardShell>
+          <ProtectedRoute roles={['Admin']}>
+            <AdminUsersPage />
+          </ProtectedRoute>
+        </DashboardShell>
+      }
+    />
+    <Route
+      path="/dashboard/users/new"
+      element={
+        <DashboardShell>
+          <ProtectedRoute roles={['Admin']}>
+            <AdminUserEditorPage />
+          </ProtectedRoute>
+        </DashboardShell>
+      }
+    />
+    <Route
+      path="/dashboard/users/:id/edit"
+      element={
+        <DashboardShell>
+          <ProtectedRoute roles={['Admin']}>
+            <AdminUserEditorPage />
           </ProtectedRoute>
         </DashboardShell>
       }

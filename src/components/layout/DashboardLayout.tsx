@@ -17,7 +17,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         { label: 'Gói cước', path: '/dashboard/packages'},
         { label: 'Tin tuyển dụng', path: '/dashboard/job-postings'},
         { label: 'Hồ sơ ứng tuyển', path: '/dashboard/job-applications'},
-        { label: 'Chat hỗ trợ', path: '/dashboard/chat'}
+        { label: 'Chat hỗ trợ', path: '/dashboard/chat'},
+        { label: 'Người dùng', path: '/dashboard/users'}
       ];
     }
     
