@@ -16,7 +16,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         { label: 'Danh mục', path: '/dashboard/categories'},
         { label: 'Gói cước', path: '/dashboard/packages'},
         { label: 'Tin tuyển dụng', path: '/dashboard/job-postings'},
-        { label: 'Hồ sơ ứng tuyển', path: '/dashboard/job-applications'}
+        { label: 'Hồ sơ ứng tuyển', path: '/dashboard/job-applications'},
+        { label: 'Chat hỗ trợ', path: '/dashboard/chat'}
       ];
     }
     
@@ -24,7 +25,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       return [
         { label: 'Đơn đăng ký', path: '/dashboard/registrations'},
         { label: 'Tin tuyển dụng', path: '/dashboard/job-postings'},
-        { label: 'Hồ sơ ứng tuyển', path: '/dashboard/job-applications'}
+        { label: 'Hồ sơ ứng tuyển', path: '/dashboard/job-applications'},
+        { label: 'Chat hỗ trợ', path: '/dashboard/chat'}
       ];
     }
     

@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import BannerCarousel from './BannerCarousel';
+import ChatbotButton from '../common/ChatbotButton';
 
 interface AppShellProps {
   children: ReactNode;
@@ -18,6 +19,7 @@ const AppShell = ({ children }: AppShellProps) => {
       {!hidesBanner && <BannerCarousel />}
       <main className="app-content">{children}</main>
       <Footer />
+      <ChatbotButton />
     </div>
   );
 };

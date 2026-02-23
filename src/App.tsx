@@ -19,6 +19,7 @@ import AdminCategoryEditorPage from './pages/dashboard/AdminCategoryEditorPage';
 import AdminJobPostingsPage from './pages/dashboard/AdminJobPostingsPage';
 import AdminJobPostingEditorPage from './pages/dashboard/AdminJobPostingEditorPage';
 import AdminJobApplicationsPage from './pages/dashboard/AdminJobApplicationsPage';
+import AdminChatPage from './pages/dashboard/AdminChatPage';
 import CareersPage from './pages/CareersPage';
 import JobDetailPage from './pages/JobDetailPage';
 import MyRegistrationsPage from './pages/dashboard/MyRegistrationsPage';
@@ -189,6 +190,16 @@ const App = () => (
         <DashboardShell>
           <ProtectedRoute roles={['Admin', 'Staff']}>
             <AdminJobApplicationsPage />
+          </ProtectedRoute>
+        </DashboardShell>
+      }
+    />
+    <Route
+      path="/dashboard/chat"
+      element={
+        <DashboardShell>
+          <ProtectedRoute roles={['Admin', 'Staff']}>
+            <AdminChatPage />
           </ProtectedRoute>
         </DashboardShell>
       }
