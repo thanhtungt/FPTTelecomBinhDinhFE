@@ -43,10 +43,11 @@ api.interceptors.response.use(
       console.error('[API] Request timeout - content too large or slow backend. Consider enabling compression on backend.');
     }
     
-    // Handle 401 Unauthorized
+    // Handle 401 Unauthorized — only redirect if not already on login page
     if (error.response?.status === 401 && typeof window !== 'undefined') {
       window.localStorage.removeItem(AUTH_STORAGE_KEY);
-      window.location.href = '/login';
+      if (!window.location.pathname.includes('/login')) {
+      }
     }
     
     return Promise.reject(error);
