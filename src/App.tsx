@@ -27,10 +27,13 @@ import JobDetailPage from './pages/JobDetailPage';
 import MyRegistrationsPage from './pages/dashboard/MyRegistrationsPage';
 import NotFoundPage from './pages/NotFoundPage';
 import { ProtectedRoute } from './components/routing/ProtectedRoute';
+import { ForceLogoutBanner } from './components/common/ForceLogoutBanner';
 import './App.css';
 
 const App = () => (
-  <Routes>
+  <>
+    <ForceLogoutBanner />
+    <Routes>
     {/* Public routes */}
     <Route path="/" element={<AppShell><HomePage /></AppShell>} />
     <Route path="/packages" element={<AppShell><PackagesPage /></AppShell>} />
@@ -239,6 +242,7 @@ const App = () => (
     
     <Route path="*" element={<AppShell><NotFoundPage /></AppShell>} />
   </Routes>
+  </>
 );
 
 export default App;
