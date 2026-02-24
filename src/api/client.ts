@@ -46,6 +46,7 @@ api.interceptors.response.use(
     // Handle 401 Unauthorized
     if (error.response?.status === 401 && typeof window !== 'undefined') {
       window.localStorage.removeItem(AUTH_STORAGE_KEY);
+      window.location.href = '/login';
     }
     
     return Promise.reject(error);
