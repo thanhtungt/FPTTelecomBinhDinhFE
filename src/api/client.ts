@@ -3,9 +3,15 @@ import axios from 'axios';
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? 'https://localhost:7086/api';
 const AUTH_STORAGE_KEY = 'fpttelecom-auth';
 
-type StoredAuth = {
+// Match the actual stored structure (full AuthResponse)
+interface StoredAuth {
+  id: number;
+  name: string;
+  email?: string | null;
+  phone: string;
+  role: string;
   token: string;
-};
+}
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -19,13 +25,19 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
     const raw = window.localStorage.getItem(AUTH_STORAGE_KEY);
+    console.log('[API] 🔑 Checking localStorage for token...', raw ? 'Found' : 'Not found');
     if (raw) {
       try {
         const parsed: StoredAuth = JSON.parse(raw);
+        console.log('[API] 📦 Parsed auth data:', { hasToken: !!parsed.token, role: parsed.role });
         if (parsed.token) {
           config.headers.Authorization = `Bearer ${parsed.token}`;
+          console.log('[API] ✅ Added Authorization header to request:', config.url);
+        } else {
+          console.warn('[API] ⚠️ Token missing in stored auth data!');
         }
       } catch (_err) {
+        console.error('[API] ❌ Failed to parse stored auth:', _err);
         window.localStorage.removeItem(AUTH_STORAGE_KEY);
       }
     }
@@ -43,10 +55,16 @@ api.interceptors.response.use(
       console.error('[API] Request timeout - content too large or slow backend. Consider enabling compression on backend.');
     }
     
-    // Handle 401 Unauthorized — only redirect if not already on login page
+    // Handle 401 Unauthorized — but NOT for auth endpoints (login/register)
     if (error.response?.status === 401 && typeof window !== 'undefined') {
-      window.localStorage.removeItem(AUTH_STORAGE_KEY);
-      if (!window.location.pathname.includes('/login')) {
+      const isAuthEndpoint = error.config?.url?.includes('/auth/');
+      
+      if (!isAuthEndpoint) {
+        // Only clear token and redirect for non-auth endpoints
+        window.localStorage.removeItem(AUTH_STORAGE_KEY);
+        if (!window.location.pathname.includes('/login')) {
+          window.location.href = '/login';
+        }
       }
     }
     

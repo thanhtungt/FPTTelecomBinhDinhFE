@@ -68,7 +68,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const handleLogin = async (payload: LoginPayload) => {
     const response = await AuthAPI.login(payload);
+    console.log('[Auth] 🔐 Login response:', { hasToken: !!response.token, role: response.role });
     persistAuth(response); // ← lưu ngay vào localStorage trước khi navigate
+    console.log('[Auth] 💾 Token saved to localStorage');
     setAuth(response);
     return response;
   };
