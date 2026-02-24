@@ -61,18 +61,21 @@ const hasTokenExpired = (token: string): boolean => {
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [auth, setAuth] = useState<AuthResponse | null>(() => loadStoredAuth());
 
+  // Safety net: sync logout (null) to localStorage
   useEffect(() => {
-    persistAuth(auth);
+    if (!auth) persistAuth(null);
   }, [auth]);
 
   const handleLogin = async (payload: LoginPayload) => {
     const response = await AuthAPI.login(payload);
+    persistAuth(response); // ← lưu ngay vào localStorage trước khi navigate
     setAuth(response);
     return response;
   };
 
   const handleRegister = async (payload: RegisterPayload) => {
     const response = await AuthAPI.register(payload);
+    persistAuth(response); // ← lưu ngay vào localStorage trước khi navigate
     setAuth(response);
     return response;
   };
