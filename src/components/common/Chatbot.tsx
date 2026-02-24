@@ -44,12 +44,10 @@ const Chatbot = ({ onClose, onMinimize }: ChatbotProps) => {
         .build();
 
       connection.on('ReceiveMessage', (message: ChatMessage) => {
-        console.log('Received message:', message);
         setMessages((prev) => [...prev, message]);
       });
 
       connection.on('StaffConnected', (data: { staffName: string; connectedAt: string }) => {
-        console.log('Staff connected:', data);
         const systemMessage: ChatMessage = {
           id: Date.now(),
           sessionId: sessionIdValue,
@@ -63,11 +61,10 @@ const Chatbot = ({ onClose, onMinimize }: ChatbotProps) => {
       });
 
       connection.on('StaffAssigned', (data: { staffName: string; assignedAt: string }) => {
-        console.log('Staff assigned:', data);
+        // Staff được assign
       });
 
       connection.on('SessionClosed', (data: { sessionId: string; closedBy: string; closedAt: string }) => {
-        console.log('Session closed:', data);
         if (data.closedBy === 'staff') {
           alert('Tư vấn viên đã đóng cuộc trò chuyện. Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!');
           onClose();
@@ -75,16 +72,13 @@ const Chatbot = ({ onClose, onMinimize }: ChatbotProps) => {
       });
 
       await connection.start();
-      console.log('SignalR Connected');
       setIsConnected(true);
 
       // Join the chat session
       await connection.invoke('JoinChatSession', sessionIdValue);
-      console.log('Joined chat session:', sessionIdValue);
 
       connectionRef.current = connection;
     } catch (error) {
-      console.error('Error connecting to SignalR:', error);
       setIsConnected(false);
     }
   }, []);
@@ -116,7 +110,6 @@ const Chatbot = ({ onClose, onMinimize }: ChatbotProps) => {
       const existingMessages = await chatApi.getMessages(session.sessionId);
       setMessages(existingMessages);
     } catch (error) {
-      console.error('Error starting chat:', error);
       alert('Không thể bắt đầu chat. Vui lòng thử lại!');
     } finally {
       setIsLoading(false);
@@ -143,7 +136,6 @@ const Chatbot = ({ onClose, onMinimize }: ChatbotProps) => {
       await connectionRef.current.invoke('SendMessage', messageDto);
       setInputMessage('');
     } catch (error) {
-      console.error('Error sending message:', error);
       alert('Không thể gửi tin nhắn. Vui lòng thử lại!');
     }
   };
@@ -187,7 +179,6 @@ const Chatbot = ({ onClose, onMinimize }: ChatbotProps) => {
       // Close the chatbot
       onClose();
     } catch (error) {
-      console.error('Error closing chat session:', error);
       alert('Không thể đóng chat. Vui lòng thử lại!');
     } finally {
       setIsClosing(false);

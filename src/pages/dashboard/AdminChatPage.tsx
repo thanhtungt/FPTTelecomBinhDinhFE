@@ -32,7 +32,7 @@ const AdminChatPage = () => {
       const data = await chatApi.getAllSessions(filterStatus);
       setSessions(data);
     } catch (error) {
-      console.error('Error loading sessions:', error);
+      // Error loading sessions
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +55,6 @@ const AdminChatPage = () => {
         .build();
 
       connection.on('ReceiveMessage', (message: ChatMessage) => {
-        console.log('Admin received message:', message);
         setMessages((prev) => [...prev, message]);
         
         // Update session list
@@ -123,7 +122,6 @@ const AdminChatPage = () => {
 
       connectionRef.current = connection;
     } catch (error) {
-      console.error('Error connecting to SignalR:', error);
       setIsConnected(false);
     }
   }, [loadSessions]);

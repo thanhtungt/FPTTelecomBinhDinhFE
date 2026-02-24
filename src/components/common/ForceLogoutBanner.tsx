@@ -35,11 +35,9 @@ export const ForceLogoutBanner = () => {
         const isExpired = payload.exp && payload.exp * 1000 < Date.now();
 
         if (!hasIssuer || !hasAudience || isExpired) {
-          console.warn('⚠️ Token không hợp lệ - hiển thị banner');
           setShowBanner(true);
         }
       } catch (err) {
-        console.error('❌ Lỗi kiểm tra token:', err);
         setShowBanner(true);
       }
     };

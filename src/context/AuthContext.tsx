@@ -25,14 +25,19 @@ const loadStoredAuth = (): AuthResponse | null => {
   try {
     const parsed: AuthResponse = JSON.parse(raw);
     if (!parsed.token) return null;
+    
     const isExpired = hasTokenExpired(parsed.token);
     if (isExpired) {
       window.localStorage.removeItem(AUTH_STORAGE_KEY);
       return null;
     }
     return parsed;
-  } catch (_err) {
-    window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  } catch (err) {
+    // Only remove localStorage if it's a parse error (corrupted data)
+    // This prevents accidental logout on other errors
+    if (err instanceof SyntaxError) {
+      window.localStorage.removeItem(AUTH_STORAGE_KEY);
+    }
     return null;
   }
 };
@@ -52,7 +57,13 @@ const hasTokenExpired = (token: string): boolean => {
   try {
     const decoded = jwtDecode<DecodedToken>(token);
     if (!decoded.exp) return false;
-    return decoded.exp * 1000 < Date.now();
+    
+    // Add 30 seconds tolerance for clock drift
+    const expiryTime = decoded.exp * 1000;
+    const currentTime = Date.now();
+    const tolerance = 30 * 1000; // 30 seconds
+    
+    return expiryTime < (currentTime - tolerance);
   } catch (_error) {
     return false;
   }
@@ -68,9 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const handleLogin = async (payload: LoginPayload) => {
     const response = await AuthAPI.login(payload);
-    console.log('[Auth] 🔐 Login response:', { hasToken: !!response.token, role: response.role });
     persistAuth(response); // ← lưu ngay vào localStorage trước khi navigate
-    console.log('[Auth] 💾 Token saved to localStorage');
     setAuth(response);
     return response;
   };
