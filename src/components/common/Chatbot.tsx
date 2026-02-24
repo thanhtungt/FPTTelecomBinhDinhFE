@@ -60,7 +60,7 @@ const Chatbot = ({ onClose, onMinimize }: ChatbotProps) => {
         setMessages((prev) => [...prev, systemMessage]);
       });
 
-      connection.on('StaffAssigned', (data: { staffName: string; assignedAt: string }) => {
+      connection.on('StaffAssigned', (_data: { staffName: string; assignedAt: string }) => {
         // Staff được assign
       });
 
