@@ -58,14 +58,16 @@ const hasTokenExpired = (token: string): boolean => {
     const decoded = jwtDecode<DecodedToken>(token);
     if (!decoded.exp) return false;
     
-    // Add 30 seconds tolerance for clock drift
+    // Add tolerance - token still valid even if slightly expired (clock drift)
     const expiryTime = decoded.exp * 1000;
     const currentTime = Date.now();
-    const tolerance = 30 * 1000; // 30 seconds
+    const tolerance = 60 * 1000; // 60 seconds tolerance for clock drift
     
-    return expiryTime < (currentTime - tolerance);
+    // Token expired if: currentTime > expiryTime + tolerance
+    return currentTime > (expiryTime + tolerance);
   } catch (_error) {
-    return false;
+    // If we can't decode token, consider it expired
+    return true;
   }
 };
 
