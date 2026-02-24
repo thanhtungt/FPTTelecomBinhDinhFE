@@ -63,7 +63,6 @@ api.interceptors.response.use(
         // Only clear token and redirect for non-auth endpoints
         window.localStorage.removeItem(AUTH_STORAGE_KEY);
         if (!window.location.pathname.includes('/login')) {
-          window.location.href = '/login';
         }
       }
     }
