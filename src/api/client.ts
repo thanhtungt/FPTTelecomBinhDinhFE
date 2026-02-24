@@ -31,8 +31,11 @@ api.interceptors.request.use((config) => {
         const parsed: StoredAuth = JSON.parse(raw);
         console.log('[API] 📦 Parsed auth data:', { hasToken: !!parsed.token, role: parsed.role });
         if (parsed.token) {
+          const tokenPreview = `${parsed.token.substring(0, 20)}...${parsed.token.substring(parsed.token.length - 20)}`;
           config.headers.Authorization = `Bearer ${parsed.token}`;
           console.log('[API] ✅ Added Authorization header to request:', config.url);
+          console.log('[API] 🎟️ Token preview:', tokenPreview);
+          console.log('[API] 📋 Full request headers:', config.headers);
         } else {
           console.warn('[API] ⚠️ Token missing in stored auth data!');
         }
@@ -57,10 +60,19 @@ api.interceptors.response.use(
     
     // Handle 401 Unauthorized — but NOT for auth endpoints (login/register)
     if (error.response?.status === 401 && typeof window !== 'undefined') {
+      console.error('[API] ❌ 401 Unauthorized Response:', {
+        url: error.config?.url,
+        method: error.config?.method,
+        hasAuthHeader: !!error.config?.headers?.Authorization,
+        responseData: error.response?.data,
+        responseHeaders: error.response?.headers
+      });
+      
       const isAuthEndpoint = error.config?.url?.includes('/auth/');
       
       if (!isAuthEndpoint) {
         // Only clear token and redirect for non-auth endpoints
+        console.warn('[API] 🚪 Clearing token and redirecting to login...');
         window.localStorage.removeItem(AUTH_STORAGE_KEY);
         if (!window.location.pathname.includes('/login')) {
         }
